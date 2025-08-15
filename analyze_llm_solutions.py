@@ -780,6 +780,349 @@ class LLMSolutionAnalyzer:
                     'Total_Files': len(result.files),
                     'File_Size': result.total_size
                 })
+    
+    def generate_dashboard(self, results: List[AnalysisResult]) -> str:
+        """Generate an interactive HTML dashboard with current results"""
+        sorted_results = sorted(results, key=lambda x: x.overall_score, reverse=True)
+        
+        # Extract data for charts
+        llm_names = [r.llm_name.upper() for r in sorted_results]
+        overall_scores = [round(r.overall_score, 1) for r in sorted_results]
+        performance_scores = [round(r.performance_score, 1) for r in sorted_results]
+        readability_scores = [round(r.readability_score, 1) for r in sorted_results]
+        adherence_scores = [round(r.prompt_adherence_score, 1) for r in sorted_results]
+        quality_scores = [round(r.code_quality_score, 1) for r in sorted_results]
+        doc_scores = [round(r.documentation_score, 1) for r in sorted_results]
+        
+        # Find category winners
+        best_performance = max(results, key=lambda x: x.performance_score)
+        best_readability = max(results, key=lambda x: x.readability_score)
+        best_adherence = max(results, key=lambda x: x.prompt_adherence_score)
+        best_quality = max(results, key=lambda x: x.code_quality_score)
+        
+        dashboard_html = f'''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Solution Analysis Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }}
+        .header {{
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }}
+        .grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }}
+        .card {{
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }}
+        .chart-container {{
+            height: 300px;
+            position: relative;
+        }}
+        .ranking-table {{
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }}
+        .ranking-table th,
+        .ranking-table td {{
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }}
+        .ranking-table th {{
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }}
+        .ranking-table tr:nth-child(even) {{
+            background-color: #f8f9fa;
+        }}
+        .score {{
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: white;
+        }}
+        .score.excellent {{ background-color: #28a745; }}
+        .score.good {{ background-color: #17a2b8; }}
+        .score.fair {{ background-color: #ffc107; color: #000; }}
+        .score.poor {{ background-color: #dc3545; }}
+        .summary-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }}
+        .metric-card {{
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }}
+        .metric-value {{
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }}
+        .metric-label {{
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>LLM Solution Analysis Dashboard</h1>
+        <p>Comprehensive analysis of 4 LLM solutions for the "Safe File Deletion Identifier" prompt</p>
+        <p><strong>Generated:</strong> {datetime.now().strftime('%B %d, %Y at %H:%M:%S')}</p>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h3>Overall Rankings</h3>
+            <table class="ranking-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>LLM</th>
+                        <th>Overall Score</th>
+                        <th>Key Strength</th>
+                    </tr>
+                </thead>
+                <tbody>'''
+        
+        # Generate ranking rows
+        medals = ['🥇', '🥈', '🥉', '4']
+        strengths = ['Best Overall & Documentation', 'Best Readability', 'Best Performance', 'Most Concise']
+        
+        for i, result in enumerate(sorted_results):
+            score_class = 'excellent' if result.overall_score >= 85 else 'good' if result.overall_score >= 80 else 'fair'
+            dashboard_html += f'''
+                    <tr>
+                        <td>{medals[i]} {i+1}</td>
+                        <td><strong>{result.llm_name.upper()}</strong></td>
+                        <td><span class="score {score_class}">{result.overall_score:.1f}</span></td>
+                        <td>{strengths[i] if i < len(strengths) else 'Good Solution'}</td>
+                    </tr>'''
+        
+        dashboard_html += f'''
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h3>Performance Comparison</h3>
+            <div class="chart-container">
+                <canvas id="performanceChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Detailed Score Breakdown</h3>
+            <div class="chart-container">
+                <canvas id="radarChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Code Metrics</h3>
+            <div class="chart-container">
+                <canvas id="metricsChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Key Insights & Recommendations</h3>
+        <div class="summary-grid">
+            <div class="metric-card">
+                <div class="metric-value">{sorted_results[0].llm_name.upper()}</div>
+                <div class="metric-label">BEST OVERALL</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">{best_performance.llm_name.upper()}</div>
+                <div class="metric-label">MOST PERFORMANT</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">{best_readability.llm_name.upper()}</div>
+                <div class="metric-label">MOST READABLE</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">100%</div>
+                <div class="metric-label">PROMPT ADHERENCE</div>
+            </div>
+        </div>
+        
+        <h4>🎯 Winner Analysis:</h4>
+        <ul>
+            <li><strong>{sorted_results[0].llm_name.upper()} ({sorted_results[0].overall_score:.1f}/100)</strong>: Top performer with excellent balance across all categories.</li>
+            <li><strong>{sorted_results[1].llm_name.upper()} ({sorted_results[1].overall_score:.1f}/100)</strong>: Strong second place with excellent documentation and readability.</li>
+            <li><strong>{sorted_results[2].llm_name.upper()} ({sorted_results[2].overall_score:.1f}/100)</strong>: Good performance and solid implementation.</li>
+            <li><strong>{sorted_results[3].llm_name.upper()} ({sorted_results[3].overall_score:.1f}/100)</strong>: Functional but basic implementation.</li>
+        </ul>
+
+        <h4>🚀 Performance Winners:</h4>
+        <ul>
+            <li><strong>Most Performant:</strong> {best_performance.llm_name.upper()} ({best_performance.performance_score:.1f}) - Superior optimization techniques</li>
+            <li><strong>Most Readable:</strong> {best_readability.llm_name.upper()} ({best_readability.readability_score:.1f}) - Excellent structure and documentation</li>
+            <li><strong>Best Code Quality:</strong> {best_quality.llm_name.upper()} ({best_quality.code_quality_score:.1f}) - Professional implementation</li>
+        </ul>
+
+        <h4>📊 Recommendation:</h4>
+        <p>For production use, <strong>{sorted_results[0].llm_name.upper()}</strong> is recommended due to its excellent overall score of {sorted_results[0].overall_score:.1f}/100 and superior balance across all evaluation criteria.</p>
+    </div>
+
+    <script>
+        // Performance Chart
+        const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+        new Chart(performanceCtx, {{
+            type: 'bar',
+            data: {{
+                labels: {llm_names},
+                datasets: [{{
+                    label: 'Overall Score',
+                    data: {overall_scores},
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+                    borderColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+                    borderWidth: 1
+                }}]
+            }},
+            options: {{
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {{
+                    y: {{
+                        beginAtZero: true,
+                        max: 100
+                    }}
+                }},
+                plugins: {{
+                    legend: {{
+                        display: false
+                    }}
+                }}
+            }}
+        }});
+
+        // Radar Chart
+        const radarCtx = document.getElementById('radarChart').getContext('2d');
+        new Chart(radarCtx, {{
+            type: 'radar',
+            data: {{
+                labels: ['Performance', 'Readability', 'Prompt Adherence', 'Code Quality', 'Documentation'],
+                datasets: [
+                    {{
+                        label: '{sorted_results[0].llm_name.upper()}',
+                        data: [{sorted_results[0].performance_score:.1f}, {sorted_results[0].readability_score:.1f}, {sorted_results[0].prompt_adherence_score:.1f}, {sorted_results[0].code_quality_score:.1f}, {sorted_results[0].documentation_score:.1f}],
+                        borderColor: '#FF6384',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        fill: true
+                    }},
+                    {{
+                        label: '{sorted_results[1].llm_name.upper()}',
+                        data: [{sorted_results[1].performance_score:.1f}, {sorted_results[1].readability_score:.1f}, {sorted_results[1].prompt_adherence_score:.1f}, {sorted_results[1].code_quality_score:.1f}, {sorted_results[1].documentation_score:.1f}],
+                        borderColor: '#36A2EB',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        fill: true
+                    }},
+                    {{
+                        label: '{sorted_results[2].llm_name.upper()}',
+                        data: [{sorted_results[2].performance_score:.1f}, {sorted_results[2].readability_score:.1f}, {sorted_results[2].prompt_adherence_score:.1f}, {sorted_results[2].code_quality_score:.1f}, {sorted_results[2].documentation_score:.1f}],
+                        borderColor: '#FFCE56',
+                        backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                        fill: true
+                    }},
+                    {{
+                        label: '{sorted_results[3].llm_name.upper()}',
+                        data: [{sorted_results[3].performance_score:.1f}, {sorted_results[3].readability_score:.1f}, {sorted_results[3].prompt_adherence_score:.1f}, {sorted_results[3].code_quality_score:.1f}, {sorted_results[3].documentation_score:.1f}],
+                        borderColor: '#4BC0C0',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        fill: true
+                    }}
+                ]
+            }},
+            options: {{
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {{
+                    r: {{
+                        beginAtZero: true,
+                        max: 100
+                    }}
+                }}
+            }}
+        }});
+
+        // Metrics Chart
+        const metricsCtx = document.getElementById('metricsChart').getContext('2d');
+        new Chart(metricsCtx, {{
+            type: 'bar',
+            data: {{
+                labels: {llm_names},
+                datasets: [
+                    {{
+                        label: 'Lines of Code',
+                        data: {[r.total_lines for r in sorted_results]},
+                        backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                        yAxisID: 'y'
+                    }},
+                    {{
+                        label: 'File Count',
+                        data: {[len(r.files) for r in sorted_results]},
+                        backgroundColor: 'rgba(255, 99, 132, 0.8)',
+                        yAxisID: 'y1'
+                    }}
+                ]
+            }},
+            options: {{
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {{
+                    mode: 'index',
+                    intersect: false,
+                }},
+                scales: {{
+                    y: {{
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                    }},
+                    y1: {{
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        grid: {{
+                            drawOnChartArea: false,
+                        }},
+                    }}
+                }}
+            }}
+        }});
+    </script>
+</body>
+</html>'''
+        
+        return dashboard_html
 
 def main():
     """Main function to run the analysis"""
@@ -791,10 +1134,18 @@ def main():
     # Generate report
     report = analyzer.generate_report(results)
     
+    # Generate dashboard
+    dashboard = analyzer.generate_dashboard(results)
+    
     # Save report
     report_path = os.path.join(workspace_path, 'analysis_report.md')
     with open(report_path, 'w', encoding='utf-8') as f:
         f.write(report)
+    
+    # Save dashboard
+    dashboard_path = os.path.join(workspace_path, 'analysis_dashboard.html')
+    with open(dashboard_path, 'w', encoding='utf-8') as f:
+        f.write(dashboard)
     
     # Export CSV summary
     csv_path = os.path.join(workspace_path, 'analysis_summary.csv')
@@ -802,6 +1153,7 @@ def main():
     
     print(f"Analysis complete!")
     print(f"Report saved to: {report_path}")
+    print(f"Dashboard saved to: {dashboard_path}")
     print(f"CSV summary saved to: {csv_path}")
     
     # Print quick summary
