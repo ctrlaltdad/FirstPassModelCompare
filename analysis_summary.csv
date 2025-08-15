@@ -1,0 +1,5 @@
+LLM,Overall_Score,Performance,Readability,Prompt_Adherence,Code_Quality,Documentation,Feature_Completeness,Total_Lines,Total_Files,File_Size
+llm4,87.9,62,93,100,95,100,92,655,4,22047
+llm3,83.6,55,93,100,78,100,92,298,2,12719
+llm1,81.9,74,83,100,75,60,92,127,1,5138
+llm2,73.5,55,88,100,64,30,92,60,1,2613

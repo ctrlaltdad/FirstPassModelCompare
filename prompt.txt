@@ -1,0 +1,1 @@
+Create for me a script that can run on windows that identifies files that are safe to delete. It doesn't delete them itself, but provides a ranking of safety. In the report, include the safety-score, parameters that went into the score consideration, file name, size, date created, and date updated. 
