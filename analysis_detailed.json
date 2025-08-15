@@ -1,5 +1,5 @@
 {
-  "analysis_timestamp": "2025-08-15T17:21:50.620470",
+  "analysis_timestamp": "2025-08-15T17:31:12.942963",
   "workspace_path": "d:\\CodingModel\\ModelCompare\\FirstPassModelCompare",
   "analyzers_used": [
     {
@@ -35,13 +35,6 @@
       "description": "Evaluates README files, inline documentation, and help system quality",
       "weight": 0.1,
       "category": "documentation",
-      "enabled": true
-    },
-    {
-      "name": "Security Analysis",
-      "description": "Evaluates security practices, input validation, and potential vulnerabilities",
-      "weight": 0.1,
-      "category": "general",
       "enabled": true
     }
   ],
@@ -221,14 +214,6 @@
             "help_coverage": 1.0,
             "help_analysis_score": 30
           }
-        },
-        "Security Analysis": {
-          "score": 0,
-          "max_score": 100.0,
-          "notes": [
-            "Analysis failed: 'SecurityAnalyzer' object has no attribute '_search_pattern'"
-          ],
-          "details": {}
         }
       }
     },
@@ -392,14 +377,6 @@
             "help_coverage": 0.0,
             "help_analysis_score": 0
           }
-        },
-        "Security Analysis": {
-          "score": 0,
-          "max_score": 100.0,
-          "notes": [
-            "Analysis failed: 'SecurityAnalyzer' object has no attribute '_search_pattern'"
-          ],
-          "details": {}
         }
       }
     },
@@ -613,14 +590,6 @@
             "help_coverage": 1.0,
             "help_analysis_score": 30
           }
-        },
-        "Security Analysis": {
-          "score": 0,
-          "max_score": 100.0,
-          "notes": [
-            "Analysis failed: 'SecurityAnalyzer' object has no attribute '_search_pattern'"
-          ],
-          "details": {}
         }
       }
     },
@@ -831,14 +800,6 @@
             "help_coverage": 1.0,
             "help_analysis_score": 30
           }
-        },
-        "Security Analysis": {
-          "score": 0,
-          "max_score": 100.0,
-          "notes": [
-            "Analysis failed: 'SecurityAnalyzer' object has no attribute '_search_pattern'"
-          ],
-          "details": {}
         }
       }
     }

@@ -355,47 +355,79 @@ class ModularLLMAnalyzer:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
 def main():
-    """Main function to run the modular analysis"""
+    """Main function to run the modular analysis and update dashboard"""
     workspace_path = r"d:\CodingModel\ModelCompare\FirstPassModelCompare"
     
     analyzer = ModularLLMAnalyzer(workspace_path)
     
-    print("Registered Analyzers:")
+    print("🤖 Running LLM Analysis...")
+    print("Enabled Analyzers:")
     for info in analyzer.registry.list_analyzers():
-        status = "✓" if info['enabled'] else "✗"
-        print(f"  {status} {info['name']} (Weight: {info['weight']:.0%})")
+        if info['enabled']:
+            print(f"  ✓ {info['name']} (Weight: {info['weight']:.0%})")
     print()
     
     # Run analysis
     results = analyzer.analyze_all_solutions()
     
-    # Generate outputs
+    # Generate all outputs
     report = analyzer.generate_report(results)
     
-    # Save files
-    report_path = os.path.join(workspace_path, 'modular_analysis_report.md')
+    # Save files with consistent naming
+    report_path = os.path.join(workspace_path, 'analysis_report.md')
     with open(report_path, 'w', encoding='utf-8') as f:
         f.write(report)
     
-    csv_path = os.path.join(workspace_path, 'modular_analysis_summary.csv')
+    csv_path = os.path.join(workspace_path, 'analysis_summary.csv')
     analyzer.export_csv_summary(results, csv_path)
     
-    json_path = os.path.join(workspace_path, 'modular_analysis_detailed.json')
+    json_path = os.path.join(workspace_path, 'analysis_detailed.json')
     analyzer.export_detailed_json(results, json_path)
     
-    print(f"Modular analysis complete!")
-    print(f"Report saved to: {report_path}")
-    print(f"CSV summary saved to: {csv_path}")
-    print(f"Detailed JSON saved to: {json_path}")
+    # Generate updated dashboard
+    from dashboard_generator import DashboardGenerator
+    dashboard_generator = DashboardGenerator()
+    dashboard_path = os.path.join(workspace_path, 'analysis_dashboard.html')
     
-    # Print quick summary
-    print("\n" + "="*50)
-    print("MODULAR ANALYSIS SUMMARY")
+    # Convert results to dashboard format
+    dashboard_data = {
+        "analysis_timestamp": datetime.now().isoformat(),
+        "results": [
+            {
+                "llm_name": r.llm_name,
+                "overall_score": r.overall_score,
+                "files": [{"path": f.path, "lines": f.lines, "size": f.size} for f in r.files],
+                "analysis_scores": {name: {"score": score.score, "notes": score.notes} 
+                                 for name, score in r.analysis_scores.items()}
+            } for r in results
+        ]
+    }
+    
+    dashboard_generator.generate_dashboard(dashboard_data, dashboard_path)
+    
+    # Print results summary
+    print("✅ Analysis Complete!")
     print("="*50)
     
     sorted_results = sorted(results, key=lambda x: x.overall_score, reverse=True)
     for i, result in enumerate(sorted_results, 1):
         print(f"{i}. {result.llm_name}: {result.overall_score:.1f}/100")
+    
+    print(f"\n📄 Files generated:")
+    print(f"  • {os.path.basename(dashboard_path)} - Interactive dashboard")
+    print(f"  • {os.path.basename(report_path)} - Detailed report")
+    print(f"  • {os.path.basename(csv_path)} - CSV summary")
+    print(f"  • {os.path.basename(json_path)} - JSON data")
+    
+    # Try to open dashboard
+    try:
+        import webbrowser
+        abs_path = os.path.abspath(dashboard_path)
+        url = f"file:///{abs_path.replace(os.sep, '/')}"
+        webbrowser.open(url)
+        print(f"\n🌐 Dashboard opened in browser!")
+    except Exception:
+        print(f"\n📍 Open dashboard manually: {dashboard_path}")
 
 if __name__ == "__main__":
     main()

@@ -15,30 +15,31 @@ This modular analyzer evaluates 4 different LLM solutions for the "Safe File Del
 
 ## 🚀 Quick Start
 
-### Interactive Menu
+### Simple One-Command Analysis
 ```bash
+python modular_analyzer.py
 ```
 
-### Direct Commands
+This will:
+- ✅ Run all enabled analysis modules
+- ✅ Generate comprehensive reports  
+- ✅ Update the interactive dashboard
+- ✅ Automatically open results in browser
+
+### Advanced Options (Optional)
 ```bash
-# Standard modular analysis
-python modular_analyzer.py
-
-# Enhanced analysis with security module demonstration
+# Demonstration with additional security module
 python demo_modular_system.py
-
-# Generate dashboard from existing analysis
-python dashboard_generator.py
 ```
 
 ## 📁 Generated Files
 
 Each analysis run creates:
 
-1. **`enhanced_analysis_dashboard.html`** - Interactive web dashboard with charts and detailed breakdowns
-2. **`enhanced_analysis_report.md`** - Comprehensive markdown report with modular scoring
-3. **`enhanced_analysis_summary.csv`** - CSV data for spreadsheet analysis
-4. **`enhanced_analysis_detailed.json`** - Structured data for programmatic access
+1. **`analysis_dashboard.html`** - Interactive web dashboard with charts and detailed breakdowns
+2. **`analysis_report.md`** - Comprehensive markdown report with modular scoring
+3. **`analysis_summary.csv`** - CSV data for spreadsheet analysis
+4. **`analysis_detailed.json`** - Structured data for programmatic access
 
 ## 🎯 Current Results Summary
 
