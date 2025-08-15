@@ -19,6 +19,7 @@ from analysis.readability import ReadabilityAnalyzer
 from analysis.prompt_adherence import PromptAdherenceAnalyzer
 from analysis.code_quality import CodeQualityAnalyzer
 from analysis.documentation import DocumentationAnalyzer
+from analysis.requirements_traceability import RequirementsTraceabilityAnalyzer
 
 @dataclass
 class LLMAnalysisResult:
@@ -78,6 +79,7 @@ class ModularLLMAnalyzer:
         self.registry.register(PromptAdherenceAnalyzer())
         self.registry.register(CodeQualityAnalyzer())
         self.registry.register(DocumentationAnalyzer())
+        self.registry.register(RequirementsTraceabilityAnalyzer())
     
     def _parse_prompt_requirements(self) -> Dict[str, Any]:
         """Parse the original prompt to extract requirements"""

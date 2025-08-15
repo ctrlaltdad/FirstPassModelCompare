@@ -32,6 +32,37 @@ class DashboardGenerator:
             'rgba(255, 159, 64, 1)',
         ]
     
+    def _calculate_overall_scores(self, data: Dict[str, Any]) -> List[float]:
+        """Calculate overall scores for each LLM based on analysis scores and weights"""
+        
+        results = data.get('results', [])
+        analyzers_used = data.get('analyzers_used', [])
+        
+        # Create a mapping of analyzer names to weights
+        analyzer_weights = {}
+        for analyzer in analyzers_used:
+            analyzer_weights[analyzer['name']] = analyzer['weight']
+        
+        overall_scores = []
+        
+        for result in results:
+            analysis_scores = result.get('analysis_scores', {})
+            weighted_sum = 0.0
+            total_weight = 0.0
+            
+            for analyzer_name, score_data in analysis_scores.items():
+                if analyzer_name in analyzer_weights:
+                    score = score_data.get('score', 0)
+                    weight = analyzer_weights[analyzer_name]
+                    weighted_sum += score * weight
+                    total_weight += weight
+            
+            # Calculate weighted average
+            overall_score = weighted_sum / total_weight if total_weight > 0 else 0
+            overall_scores.append(overall_score)
+        
+        return overall_scores
+    
     def load_analysis_data(self, source_path: str) -> Dict[str, Any]:
         """Load analysis data from JSON file or extract from analyzer results"""
         
@@ -68,7 +99,9 @@ class DashboardGenerator:
         
         # Extract data for charts
         llm_names = [result['llm_name'] for result in results]
-        overall_scores = [result.get('overall_score', 0) for result in results]
+        
+        # Calculate overall scores using analyzer weights
+        overall_scores = self._calculate_overall_scores(data)
         
         # Get all analyzer categories
         analyzer_categories = set()
@@ -121,7 +154,7 @@ class DashboardGenerator:
         """Generate the complete HTML template"""
         
         # Generate detailed results table
-        results_table = self._generate_results_table(results, analyzer_categories)
+        results_table = self._generate_results_table(results, analyzer_categories, overall_scores)
         
         return f"""<!DOCTYPE html>
 <html lang="en">
@@ -437,11 +470,18 @@ class DashboardGenerator:
 </body>
 </html>"""
     
-    def _generate_results_table(self, results: List[Dict], analyzer_categories: List[str]) -> str:
+    def _generate_results_table(self, results: List[Dict], analyzer_categories: List[str], overall_scores: List[float]) -> str:
         """Generate the detailed results table HTML"""
         
+        # Combine results with their calculated overall scores
+        results_with_scores = []
+        for i, result in enumerate(results):
+            result_copy = result.copy()
+            result_copy['overall_score'] = overall_scores[i] if i < len(overall_scores) else 0
+            results_with_scores.append(result_copy)
+        
         # Sort results by overall score
-        sorted_results = sorted(results, key=lambda x: x.get('overall_score', 0), reverse=True)
+        sorted_results = sorted(results_with_scores, key=lambda x: x.get('overall_score', 0), reverse=True)
         
         rows = []
         for i, result in enumerate(sorted_results, 1):
@@ -542,11 +582,22 @@ class DashboardGenerator:
                 
                 # Add notes
                 notes = score_data.get('notes', [])
-                if notes:
+                
+                # Special handling for Requirements Traceability Analysis
+                if category == "Requirements Traceability Analysis":
+                    # For Requirements Traceability, the summary notes are in max_score
+                    max_score_data = score_data.get('max_score', [])
+                    if isinstance(max_score_data, list):
+                        notes = max_score_data
+                
+                if notes and isinstance(notes, list):
                     details.append("<p><strong>Key Points:</strong></p>")
                     details.append("<ul>")
-                    for note in notes[:5]:  # Limit to first 5 notes
-                        details.append(f"<li>{note}</li>")
+                    # Show more notes for Requirements Traceability to include methodology insights
+                    max_notes = 15 if category == "Requirements Traceability Analysis" else 5
+                    for note in notes[:max_notes]:
+                        if note.strip():  # Skip empty strings
+                            details.append(f"<li>{note}</li>")
                     details.append("</ul>")
         
         return "".join(details)
@@ -557,11 +608,17 @@ def main():
     
     generator = DashboardGenerator()
     
-    # Load data from modular analysis
-    data = generator.load_analysis_data(workspace_path)
+    # Load data from analysis_detailed.json (the correct file)
+    json_path = os.path.join(workspace_path, 'analysis_detailed.json')
+    if os.path.exists(json_path):
+        with open(json_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+    else:
+        print("No analysis results found")
+        data = generator.load_analysis_data(workspace_path)
     
-    # Generate dashboard
-    dashboard_path = os.path.join(workspace_path, 'modular_analysis_dashboard.html')
+    # Generate dashboard with the correct filename
+    dashboard_path = os.path.join(workspace_path, 'analysis_dashboard.html')
     generator.generate_dashboard(data, dashboard_path)
     
     print(f"Interactive dashboard generated: {dashboard_path}")
