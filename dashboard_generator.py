@@ -77,22 +77,34 @@ class DashboardGenerator:
         
         analyzer_categories = sorted(analyzer_categories)
         
-        # Prepare data for category comparison chart
-        category_data = {}
-        for category in analyzer_categories:
-            category_data[category] = []
-            for result in results:
-                score = result.get('analysis_scores', {}).get(category, {})
-                if isinstance(score, dict):
-                    category_data[category].append(score.get('score', 0))
+        # Prepare data for category comparison chart (radar chart)
+        # For radar chart: each dataset = one LLM, data points = scores for each category
+        llm_datasets = []
+        for i, result in enumerate(results):
+            scores_for_categories = []
+            for category in analyzer_categories:
+                score_data = result.get('analysis_scores', {}).get(category, {})
+                if isinstance(score_data, dict):
+                    scores_for_categories.append(score_data.get('score', 0))
                 else:
-                    category_data[category].append(0)
+                    scores_for_categories.append(0)
+            
+            color_idx = i % len(self.chart_colors)
+            llm_datasets.append({
+                'label': result['llm_name'],
+                'data': scores_for_categories,
+                'backgroundColor': self.chart_colors[color_idx],
+                'borderColor': self.border_colors[color_idx],
+                'borderWidth': 2,
+                'fill': True,
+                'pointRadius': 4
+            })
         
         # Generate the HTML
         html_content = self._generate_html_template(
             llm_names=llm_names,
             overall_scores=overall_scores,
-            category_data=category_data,
+            llm_datasets=llm_datasets,
             analyzer_categories=analyzer_categories,
             results=results,
             timestamp=data.get('analysis_timestamp', datetime.now().isoformat())
@@ -104,21 +116,9 @@ class DashboardGenerator:
         print(f"Dashboard generated: {output_path}")
     
     def _generate_html_template(self, llm_names: List[str], overall_scores: List[float], 
-                              category_data: Dict[str, List[float]], analyzer_categories: List[str],
+                              llm_datasets: List[Dict], analyzer_categories: List[str],
                               results: List[Dict], timestamp: str) -> str:
         """Generate the complete HTML template"""
-        
-        # Create datasets for the category comparison chart
-        datasets = []
-        for i, category in enumerate(analyzer_categories):
-            color_idx = i % len(self.chart_colors)
-            datasets.append({
-                'label': category.replace(' Analysis', ''),
-                'data': category_data[category],
-                'backgroundColor': self.chart_colors[color_idx],
-                'borderColor': self.border_colors[color_idx],
-                'borderWidth': 1
-            })
         
         # Generate detailed results table
         results_table = self._generate_results_table(results, analyzer_categories)
@@ -400,7 +400,7 @@ class DashboardGenerator:
             type: 'radar',
             data: {{
                 labels: {json.dumps([cat.replace(' Analysis', '') for cat in analyzer_categories])},
-                datasets: {json.dumps(datasets)}
+                datasets: {json.dumps(llm_datasets)}
             }},
             options: {{
                 responsive: true,
