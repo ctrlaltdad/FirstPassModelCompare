@@ -1,5 +1,5 @@
 {
-  "analysis_timestamp": "2025-08-15T17:49:50.450371",
+  "analysis_timestamp": "2025-08-16T15:07:21.312868",
   "workspace_path": "d:\\CodingModel\\ModelCompare\\FirstPassModelCompare",
   "analyzers_used": [
     {
@@ -12,35 +12,42 @@
     {
       "name": "Readability Analysis",
       "description": "Evaluates code clarity, comments, structure, and naming conventions",
-      "weight": 0.2,
+      "weight": 0.15,
       "category": "readability",
-      "enabled": true
-    },
-    {
-      "name": "Prompt Adherence Analysis",
-      "description": "Evaluates how well the solution follows the original requirements",
-      "weight": 0.25,
-      "category": "requirements",
       "enabled": true
     },
     {
       "name": "Code Quality Analysis",
       "description": "Evaluates error handling, type safety, and PowerShell best practices",
-      "weight": 0.15,
+      "weight": 0.1,
       "category": "quality",
       "enabled": true
     },
     {
       "name": "Documentation Analysis",
       "description": "Evaluates README files, inline documentation, and help system quality",
-      "weight": 0.1,
+      "weight": 0.05,
       "category": "documentation",
       "enabled": true
     },
     {
       "name": "Requirements Traceability Analysis",
       "description": "Maps original prompt requirements to implementation evidence with quality assessment",
+      "weight": 0.25,
+      "category": "general",
+      "enabled": true
+    },
+    {
+      "name": "Security Analysis",
+      "description": "Evaluates security vulnerabilities, input validation, and safe coding practices",
       "weight": 0.2,
+      "category": "general",
+      "enabled": true
+    },
+    {
+      "name": "Adaptability Analysis",
+      "description": "Evaluates solution flexibility, configurability, and cross-platform compatibility",
+      "weight": 0.1,
       "category": "general",
       "enabled": true
     }
@@ -106,62 +113,6 @@
             "section_comments": 6,
             "indentation_ratio": 0.6456692913385826,
             "mixed_indentation": false
-          }
-        },
-        "Prompt Adherence Analysis": {
-          "score": 100,
-          "max_score": 100.0,
-          "notes": [
-            "✓ Creates Windows-compatible PowerShell script",
-            "✓ Identifies files for potential deletion",
-            "✓ Explicitly states no deletion occurs and contains no deletion commands",
-            "✓ Implements ranking/scoring system",
-            "✓ Includes safety-score",
-            "✓ Includes parameters",
-            "✓ Includes file name",
-            "✓ Includes size",
-            "✓ Includes date created",
-            "✓ Includes date updated",
-            "+ Bonus: export options",
-            "+ Bonus: configurable params",
-            "+ Bonus: help documentation",
-            "+ Bonus: error handling",
-            "+ Bonus: progress indication"
-          ],
-          "details": {
-            "windows_compatible": true,
-            "powershell_file_count": 1,
-            "safety_indicators_found": [
-              "safe",
-              "delete",
-              "safety"
-            ],
-            "identifies_files": true,
-            "has_deletion_protection_statement": true,
-            "has_deletion_commands": false,
-            "ranking_indicators_found": [
-              "score",
-              "rank",
-              "safety"
-            ],
-            "has_ranking_system": true,
-            "required_fields_found": [
-              "safety-score",
-              "parameters",
-              "file name",
-              "size",
-              "date created",
-              "date updated"
-            ],
-            "required_fields_count": 6,
-            "bonus_features_found": [
-              "export_options",
-              "configurable_params",
-              "help_documentation",
-              "error_handling",
-              "progress_indication"
-            ],
-            "bonus_score": 10
           }
         },
         "Code Quality Analysis": {
@@ -418,6 +369,87 @@
             ]
           },
           "details": {}
+        },
+        "Security Analysis": {
+          "score": 100,
+          "max_score": [
+            "✓ No critical security vulnerabilities detected",
+            "✓ No high-risk security issues detected",
+            "⚡ 2 MEDIUM risk security issues found",
+            "⚪ Some security practices found (2 detected)",
+            "- MEDIUM: Input Validation (1 instances)",
+            "- MEDIUM: Error Handling (1 instances)",
+            "+ Safe File Operations: 1 instances",
+            "+ Logging Auditing: 1 instances"
+          ],
+          "notes": {
+            "security_issues": {
+              "MEDIUM_input_validation": [
+                "param (\n    [Parameter(Mandatory = $false, ValueFromPipeline = $true, Position = 0)"
+              ],
+              "MEDIUM_error_handling": [
+                "-ErrorAction SilentlyContinue"
+              ]
+            },
+            "good_practices": {
+              "safe_file_operations": [
+                "Resolve-Path"
+              ],
+              "logging_auditing": [
+                "Write-Error"
+              ]
+            },
+            "files_analyzed": 1,
+            "total_content_length": 5012,
+            "security_score_breakdown": {
+              "critical_issues": 0,
+              "high_risk_issues": 0,
+              "medium_risk_issues": 2,
+              "good_practices_count": 2,
+              "security_categories_analyzed": 11,
+              "practice_categories_found": 2
+            }
+          },
+          "details": {}
+        },
+        "Adaptability Analysis": {
+          "score": 39.5,
+          "max_score": [
+            "Configuration Flexibility: 90.0/100",
+            "Cross-Platform Compatibility: 20.0/100",
+            "Extensibility: 20.0/100",
+            "Environment Adaptation: 0.0/100",
+            "Input/Output Flexibility: 60.0/100",
+            "Error Recovery: 30.0/100",
+            "✓ Excellent configuration options",
+            "❌ Platform-specific limitations",
+            "❌ Limited extensibility"
+          ],
+          "notes": {
+            "configuration_score": 90.0,
+            "cross_platform_score": 20.0,
+            "extensibility_score": 20.0,
+            "environment_adaptation_score": 0.0,
+            "input_output_flexibility_score": 60.0,
+            "error_recovery_score": 30.0,
+            "detailed_notes": [
+              "+ 2 configurable parameters found",
+              "+ 1 configurable parameters found",
+              "+ 1 configurable parameters found",
+              "+ 8 configurable parameters found",
+              "+ Environment variable usage found",
+              "+ Proper path handling methods used",
+              "- Hardcoded paths detected (reduces portability)",
+              "+ PowerShell Core compatibility considered",
+              "+ Extension/plugin architecture found",
+              "+ Alternative output format available",
+              "+ PowerShell pipeline integration",
+              "+ Customizable output formatting",
+              "+ Basic error handling present",
+              "+ Graceful degradation patterns detected"
+            ]
+          },
+          "details": {}
         }
       }
     },
@@ -471,60 +503,6 @@
             "section_comments": 5,
             "indentation_ratio": 0.6166666666666667,
             "mixed_indentation": false
-          }
-        },
-        "Prompt Adherence Analysis": {
-          "score": 100,
-          "max_score": 100.0,
-          "notes": [
-            "✓ Creates Windows-compatible PowerShell script",
-            "✓ Identifies files for potential deletion",
-            "✓ Explicitly states no deletion occurs and contains no deletion commands",
-            "✓ Implements ranking/scoring system",
-            "✓ Includes safety-score",
-            "✓ Includes parameters",
-            "✓ Includes file name",
-            "✓ Includes size",
-            "✓ Includes date created",
-            "✓ Includes date updated",
-            "+ Bonus: export options",
-            "+ Bonus: configurable params",
-            "+ Bonus: error handling",
-            "+ Bonus: progress indication"
-          ],
-          "details": {
-            "windows_compatible": true,
-            "powershell_file_count": 1,
-            "safety_indicators_found": [
-              "safe",
-              "delete",
-              "safety"
-            ],
-            "identifies_files": true,
-            "has_deletion_protection_statement": true,
-            "has_deletion_commands": false,
-            "ranking_indicators_found": [
-              "score",
-              "rank",
-              "safety"
-            ],
-            "has_ranking_system": true,
-            "required_fields_found": [
-              "safety-score",
-              "parameters",
-              "file name",
-              "size",
-              "date created",
-              "date updated"
-            ],
-            "required_fields_count": 6,
-            "bonus_features_found": [
-              "export_options",
-              "configurable_params",
-              "error_handling",
-              "progress_indication"
-            ],
-            "bonus_score": 8
           }
         },
         "Code Quality Analysis": {
@@ -778,6 +756,75 @@
             ]
           },
           "details": {}
+        },
+        "Security Analysis": {
+          "score": 94.0,
+          "max_score": [
+            "✓ No critical security vulnerabilities detected",
+            "✓ No high-risk security issues detected",
+            "⚡ 3 MEDIUM risk security issues found",
+            "❌ No security best practices detected",
+            "- MEDIUM: Input Validation (2 instances)",
+            "- MEDIUM: Error Handling (1 instances)"
+          ],
+          "notes": {
+            "security_issues": {
+              "MEDIUM_input_validation": [
+                "param(\n    [string]$Path = '.',\n    [string]$ReportFile = 'SafeDeleteReport.csv'\n)\n\n",
+                "param(\n        [System.IO.FileInfo]$File\n    )\n    "
+              ],
+              "MEDIUM_error_handling": [
+                "-ErrorAction SilentlyContinue"
+              ]
+            },
+            "good_practices": {},
+            "files_analyzed": 1,
+            "total_content_length": 2554,
+            "security_score_breakdown": {
+              "critical_issues": 0,
+              "high_risk_issues": 0,
+              "medium_risk_issues": 3,
+              "good_practices_count": 0,
+              "security_categories_analyzed": 11,
+              "practice_categories_found": 0
+            }
+          },
+          "details": {}
+        },
+        "Adaptability Analysis": {
+          "score": 27.5,
+          "max_score": [
+            "Configuration Flexibility: 50.0/100",
+            "Cross-Platform Compatibility: 0.0/100",
+            "Extensibility: 40.0/100",
+            "Environment Adaptation: 0.0/100",
+            "Input/Output Flexibility: 40.0/100",
+            "Error Recovery: 30.0/100",
+            "❌ Limited configuration options",
+            "❌ Platform-specific limitations",
+            "❌ Limited extensibility"
+          ],
+          "notes": {
+            "configuration_score": 50.0,
+            "cross_platform_score": 0.0,
+            "extensibility_score": 40.0,
+            "environment_adaptation_score": 0.0,
+            "input_output_flexibility_score": 40.0,
+            "error_recovery_score": 30.0,
+            "detailed_notes": [
+              "+ 2 configurable parameters found",
+              "+ 12 configurable parameters found",
+              "- Hardcoded paths detected (reduces portability)",
+              "+ PowerShell Core compatibility considered",
+              "+ Some modularity with 1 function(s)",
+              "+ Extension/plugin architecture found",
+              "+ Alternative output format available",
+              "+ PowerShell pipeline integration",
+              "+ Basic error handling present",
+              "+ Graceful degradation patterns detected"
+            ]
+          },
+          "details": {}
         }
       }
     },
@@ -866,63 +913,6 @@
             "section_comments": 21,
             "indentation_ratio": 0.5565217391304348,
             "mixed_indentation": false
-          }
-        },
-        "Prompt Adherence Analysis": {
-          "score": 100,
-          "max_score": 100.0,
-          "notes": [
-            "✓ Creates Windows-compatible PowerShell script",
-            "✓ Identifies files for potential deletion",
-            "✓ Explicitly states no deletion occurs and contains no deletion commands",
-            "✓ Implements ranking/scoring system",
-            "✓ Includes safety-score",
-            "✓ Includes parameters",
-            "✓ Includes file name",
-            "✓ Includes size",
-            "✓ Includes date created",
-            "✓ Includes date updated",
-            "+ Bonus: export options",
-            "+ Bonus: configurable params",
-            "+ Bonus: help documentation",
-            "+ Bonus: error handling",
-            "+ Bonus: progress indication"
-          ],
-          "details": {
-            "windows_compatible": true,
-            "powershell_file_count": 1,
-            "safety_indicators_found": [
-              "safe",
-              "delete",
-              "safety",
-              "risk"
-            ],
-            "identifies_files": true,
-            "has_deletion_protection_statement": true,
-            "has_deletion_commands": false,
-            "ranking_indicators_found": [
-              "score",
-              "rank",
-              "safety"
-            ],
-            "has_ranking_system": true,
-            "required_fields_found": [
-              "safety-score",
-              "parameters",
-              "file name",
-              "size",
-              "date created",
-              "date updated"
-            ],
-            "required_fields_count": 6,
-            "bonus_features_found": [
-              "export_options",
-              "configurable_params",
-              "help_documentation",
-              "error_handling",
-              "progress_indication"
-            ],
-            "bonus_score": 10
           }
         },
         "Code Quality Analysis": {
@@ -1188,6 +1178,91 @@
             ]
           },
           "details": {}
+        },
+        "Security Analysis": {
+          "score": 100,
+          "max_score": [
+            "✓ No critical security vulnerabilities detected",
+            "✓ No high-risk security issues detected",
+            "⚡ 3 MEDIUM risk security issues found",
+            "⚪ Some security practices found (4 detected)",
+            "- MEDIUM: Input Validation (2 instances)",
+            "- MEDIUM: Error Handling (1 instances)",
+            "+ Safe File Operations: 3 instances",
+            "+ Logging Auditing: 1 instances"
+          ],
+          "notes": {
+            "security_issues": {
+              "MEDIUM_input_validation": [
+                "Param(\n    [Parameter(Position=0)",
+                "param([long]$Bytes)\n    "
+              ],
+              "MEDIUM_error_handling": [
+                "-ErrorAction SilentlyContinue"
+              ]
+            },
+            "good_practices": {
+              "safe_file_operations": [
+                "Test-Path",
+                "-LiteralPath",
+                "Resolve-Path"
+              ],
+              "logging_auditing": [
+                "Write-Warning"
+              ]
+            },
+            "files_analyzed": 1,
+            "total_content_length": 9346,
+            "security_score_breakdown": {
+              "critical_issues": 0,
+              "high_risk_issues": 0,
+              "medium_risk_issues": 3,
+              "good_practices_count": 4,
+              "security_categories_analyzed": 11,
+              "practice_categories_found": 2
+            }
+          },
+          "details": {}
+        },
+        "Adaptability Analysis": {
+          "score": 31.8,
+          "max_score": [
+            "Configuration Flexibility: 65.0/100",
+            "Cross-Platform Compatibility: 20.0/100",
+            "Extensibility: 30.0/100",
+            "Environment Adaptation: 0.0/100",
+            "Input/Output Flexibility: 35.0/100",
+            "Error Recovery: 20.0/100",
+            "⚡ Good configuration flexibility",
+            "❌ Platform-specific limitations",
+            "❌ Limited extensibility"
+          ],
+          "notes": {
+            "configuration_score": 65.0,
+            "cross_platform_score": 20.0,
+            "extensibility_score": 30.0,
+            "environment_adaptation_score": 0.0,
+            "input_output_flexibility_score": 35.0,
+            "error_recovery_score": 20.0,
+            "detailed_notes": [
+              "+ 1 configurable parameters found",
+              "+ 1 configurable parameters found",
+              "+ 2 configurable parameters found",
+              "+ 47 configurable parameters found",
+              "+ Configuration file support detected",
+              "+ Environment variable usage found",
+              "+ Switch parameters for boolean options",
+              "+ Proper path handling methods used",
+              "+ PowerShell Core compatibility considered",
+              "+ Some modularity with 1 function(s)",
+              "+ Extension/plugin architecture found",
+              "+ Data-driven processing patterns detected",
+              "+ Multiple output formats supported (2 types)",
+              "+ PowerShell pipeline integration",
+              "+ Customizable output formatting"
+            ]
+          },
+          "details": {}
         }
       }
     },
@@ -1266,64 +1341,6 @@
             "section_comments": 27,
             "indentation_ratio": 0.7313019390581718,
             "mixed_indentation": false
-          }
-        },
-        "Prompt Adherence Analysis": {
-          "score": 100,
-          "max_score": 100.0,
-          "notes": [
-            "✓ Creates Windows-compatible PowerShell script",
-            "✓ Identifies files for potential deletion",
-            "~ No deletion commands found (good)",
-            "✓ Implements ranking/scoring system",
-            "✓ Includes safety-score",
-            "✓ Includes parameters",
-            "✓ Includes file name",
-            "✓ Includes size",
-            "✓ Includes date created",
-            "✓ Includes date updated",
-            "+ Bonus: export options",
-            "+ Bonus: configurable params",
-            "+ Bonus: help documentation",
-            "+ Bonus: error handling",
-            "+ Bonus: progress indication"
-          ],
-          "details": {
-            "windows_compatible": true,
-            "powershell_file_count": 1,
-            "safety_indicators_found": [
-              "safe",
-              "delete",
-              "safety",
-              "risk"
-            ],
-            "identifies_files": true,
-            "has_deletion_protection_statement": false,
-            "has_deletion_commands": false,
-            "ranking_indicators_found": [
-              "score",
-              "rank",
-              "rating",
-              "safety"
-            ],
-            "has_ranking_system": true,
-            "required_fields_found": [
-              "safety-score",
-              "parameters",
-              "file name",
-              "size",
-              "date created",
-              "date updated"
-            ],
-            "required_fields_count": 6,
-            "bonus_features_found": [
-              "export_options",
-              "configurable_params",
-              "help_documentation",
-              "error_handling",
-              "progress_indication"
-            ],
-            "bonus_score": 10
           }
         },
         "Code Quality Analysis": {
@@ -1592,6 +1609,93 @@
                 "quality": 100,
                 "evidence_count": 3
               }
+            ]
+          },
+          "details": {}
+        },
+        "Security Analysis": {
+          "score": 100,
+          "max_score": [
+            "✓ No critical security vulnerabilities detected",
+            "✓ No high-risk security issues detected",
+            "⚡ 4 MEDIUM risk security issues found",
+            "⚪ Some security practices found (5 detected)",
+            "- MEDIUM: Input Validation (3 instances)",
+            "- MEDIUM: Error Handling (1 instances)",
+            "+ Safe File Operations: 2 instances",
+            "+ Logging Auditing: 3 instances"
+          ],
+          "notes": {
+            "security_issues": {
+              "MEDIUM_input_validation": [
+                "param(\n    [Parameter(ValueFromPipeline = $true)",
+                "param(\n        [System.IO.FileInfo]$File\n    )\n    \n    ",
+                "param(\n        [string]$DirectoryPath,\n        [int]$CurrentDepth = 0\n    )\n    \n    "
+              ],
+              "MEDIUM_error_handling": [
+                "-ErrorAction SilentlyContinue"
+              ]
+            },
+            "good_practices": {
+              "safe_file_operations": [
+                "Test-Path",
+                "Test-Path"
+              ],
+              "logging_auditing": [
+                "Write-Warning",
+                "Write-Warning",
+                "Write-Warning"
+              ]
+            },
+            "files_analyzed": 1,
+            "total_content_length": 11472,
+            "security_score_breakdown": {
+              "critical_issues": 0,
+              "high_risk_issues": 0,
+              "medium_risk_issues": 4,
+              "good_practices_count": 5,
+              "security_categories_analyzed": 11,
+              "practice_categories_found": 2
+            }
+          },
+          "details": {}
+        },
+        "Adaptability Analysis": {
+          "score": 13.5,
+          "max_score": [
+            "Configuration Flexibility: 25.0/100",
+            "Cross-Platform Compatibility: 5.0/100",
+            "Extensibility: 15.0/100",
+            "Environment Adaptation: 5.0/100",
+            "Input/Output Flexibility: 15.0/100",
+            "Error Recovery: 10.0/100",
+            "❌ Limited configuration options",
+            "❌ Platform-specific limitations",
+            "❌ Limited extensibility"
+          ],
+          "notes": {
+            "configuration_score": 25.0,
+            "cross_platform_score": 5.0,
+            "extensibility_score": 15.0,
+            "environment_adaptation_score": 5.0,
+            "input_output_flexibility_score": 15.0,
+            "error_recovery_score": 10.0,
+            "detailed_notes": [
+              "+ 1 configurable parameters found",
+              "+ 1 configurable parameters found",
+              "+ 3 configurable parameters found",
+              "+ 31 configurable parameters found",
+              "+ Switch parameters for boolean options",
+              "+ Proper path handling methods used",
+              "- Hardcoded paths detected (reduces portability)",
+              "+ PowerShell Core compatibility considered",
+              "+ Some modularity with 2 function(s)",
+              "+ Extension/plugin architecture found",
+              "+ Data-driven processing patterns detected",
+              "+ PowerShell version compatibility checks",
+              "+ Alternative output format available",
+              "+ PowerShell pipeline integration",
+              "+ Customizable output formatting"
             ]
           },
           "details": {}

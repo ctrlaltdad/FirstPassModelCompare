@@ -1,5 +1,5 @@
-LLM,Overall_Score,Total_Lines,Total_Files,File_Size,Code_Quality,Documentation,Performance,Prompt_Adherence,Readability,Requirements_Traceability
-llm4,89.7,361,4,22047,95,100,62,100,100,99.5
-llm3,85.4,230,2,12719,78,100,55,100,100,99.5
-llm1,85.3,127,1,5138,75,70,74,100,93,99.5
-llm2,77.9,60,1,2613,64,60,55,100,93,98.9
+LLM,Overall_Score,Total_Lines,Total_Files,File_Size,Adaptability,Code_Quality,Documentation,Performance,Readability,Requirements_Traceability,Security
+llm1,83.6,127,1,5138,39.5,75,70,74,93,99.5,100
+llm4,83.1,361,4,22047,13.5,95,100,62,100,99.5,100
+llm3,81.9,230,2,12719,31.8,78,100,55,100,99.5,100
+llm2,75.9,60,1,2613,27.5,64,60,55,93,98.9,94.0

@@ -16,7 +16,7 @@ class CodeQualityAnalyzer(BaseAnalyzer):
         super().__init__(
             name="Code Quality Analysis",
             description="Evaluates error handling, type safety, and PowerShell best practices",
-            weight=0.15
+            weight=0.10
         )
     
     @property

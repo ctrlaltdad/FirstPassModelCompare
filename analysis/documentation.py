@@ -16,7 +16,7 @@ class DocumentationAnalyzer(BaseAnalyzer):
         super().__init__(
             name="Documentation Analysis",
             description="Evaluates README files, inline documentation, and help system quality",
-            weight=0.10
+            weight=0.05
         )
     
     @property

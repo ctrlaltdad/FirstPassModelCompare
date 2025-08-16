@@ -16,7 +16,7 @@ class ReadabilityAnalyzer(BaseAnalyzer):
         super().__init__(
             name="Readability Analysis",
             description="Evaluates code clarity, comments, structure, and naming conventions",
-            weight=0.20
+            weight=0.15
         )
     
     @property

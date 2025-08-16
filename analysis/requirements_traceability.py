@@ -47,7 +47,7 @@ class RequirementsTraceabilityAnalyzer(BaseAnalyzer):
         super().__init__(
             name="Requirements Traceability Analysis",
             description="Maps original prompt requirements to implementation evidence with quality assessment",
-            weight=0.20  # 20% weight - important for compliance
+            weight=0.25  # 25% weight - covers prompt adherence and compliance
         )
         
         # Define the detailed requirements from the prompt

@@ -1,17 +1,37 @@
 # Modular LLM Solution Analyzer
 
-A comprehensive, extensible framework for comparing and analyzing AI-generated code solutions using a plugin-based architecture.
+A comprehensive, extensible framework for comparing and analyzing AI-generated code solutions using a plugin-based architecture with interactive weight controls and real-time analysis.
 
 ## 🎯 What It Does
 
-This modular analyzer evaluates 4 different LLM solutions for the "Safe File Deletion Identifier" prompt across multiple configurable dimensions:
+This modular analyzer evaluates 4 different LLM solutions for the "Safe File Deletion Identifier" prompt across **7 configurable analysis dimensions**:
 
-- **Performance Analysis** (25% weight) - Algorithm efficiency, optimization techniques, complexity analysis
-- **Readability Analysis** (20% weight) - Code clarity, comments, structure, naming conventions
-- **Prompt Adherence Analysis** (25% weight) - Requirements compliance and completeness
-- **Code Quality Analysis** (15% weight) - Error handling, best practices, type safety
-- **Documentation Analysis** (10% weight) - README quality, inline docs, help systems
-- **Security Analysis** (10% weight) - Input validation, dangerous operations, security practices *(extensible example)*
+- **Requirements Traceability Analysis** (25% weight) - Requirements compliance and completeness tracking
+- **Performance Analysis** (20% weight) - Algorithm efficiency, optimization techniques, complexity analysis  
+- **Readability Analysis** (15% weight) - Code clarity, comments, structure, naming conventions
+- **Security Analysis** (15% weight) - Input validation, dangerous operations, security practices
+- **Adaptability Analysis** (10% weight) - Solution flexibility, configurability, and extensibility
+- **Code Quality Analysis** (10% weight) - Error handling, best practices, type safety
+- **Documentation Analysis** (5% weight) - README quality, inline docs, help systems
+
+## ✨ Key Features
+
+### 🎛️ **Interactive Weight Controls**
+- **Smart Redistribution**: Weights automatically balance to exactly 100% when adjusted
+- **Real-time Updates**: Charts, rankings, and scores update instantly as you change weights
+- **Preset Configurations**: 6 built-in weight presets for different analysis scenarios:
+  - **Balanced**: Equal emphasis across all criteria
+  - **Security First**: Prioritizes security and requirements compliance
+  - **Performance Focus**: Emphasizes speed and adaptability  
+  - **Enterprise**: Documentation and requirements heavy
+  - **Agile Development**: Adaptability and code quality focused
+  - **Maintenance**: Readability and documentation priority
+
+### 🎨 **Enhanced User Experience**
+- **Collapsible Advanced Controls**: Weight controls start collapsed for cleaner interface
+- **Modal Guidance System**: Interactive help with tips and preset explanations
+- **Visual Feedback**: Smooth animations and color-coded analysis sections
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
 
 ## 🚀 Quick Start
 
@@ -21,10 +41,10 @@ python modular_analyzer.py
 ```
 
 This will:
-- ✅ Run all enabled analysis modules
-- ✅ Generate comprehensive reports  
-- ✅ Update the interactive dashboard
-- ✅ Automatically open results in browser
+- ✅ Run all 7 enabled analysis modules
+- ✅ Generate comprehensive reports with interactive dashboard
+- ✅ Open results in browser with real-time weight controls
+- ✅ Provide smart weight redistribution and preset configurations
 
 ### Advanced Options (Optional)
 ```bash
@@ -43,14 +63,16 @@ Each analysis run creates:
 
 ## 🎯 Current Results Summary
 
-Based on the latest modular analysis:
+Based on the latest modular analysis with 7-dimensional scoring:
 
 | Rank | LLM | Score | Key Strengths |
 |------|-----|-------|---------------|
-| 🥇 1 | LLM4 | 84.8 | Excellent code quality (95.0) & comprehensive documentation |
-| 🥈 2 | LLM3 | 80.5 | Perfect readability (100.0) & documentation |
-| 🥉 3 | LLM1 | 80.3 | Best performance optimization (74.0) |
-| 4 | LLM2 | 73.0 | Simple, functional implementation |
+| 🥇 1 | LLM1 | 83.6 | Excellent security (100.0) & requirements compliance (99.5) |
+| 🥈 2 | LLM4 | 83.1 | Outstanding code quality (95.0) & comprehensive documentation (100.0) |
+| � 3 | LLM3 | 81.9 | Perfect readability (100.0) & documentation (100.0) |
+| 4 | LLM2 | 75.9 | Strong requirements traceability (98.9) & security (94.0) |
+
+*Rankings may change based on your weight preferences - use the interactive controls to explore different scenarios!*
 
 ## 🏗️ Modular Architecture
 
@@ -65,10 +87,11 @@ The system uses a plugin-based architecture for easy extensibility:
 ### Analysis Modules (Plugins)
 - **`analysis/performance.py`** - Algorithmic efficiency evaluation
 - **`analysis/readability.py`** - Code clarity and maintainability assessment
-- **`analysis/prompt_adherence.py`** - Requirements compliance checking
+- **`analysis/requirements_traceability.py`** - Requirements compliance and traceability matrix
 - **`analysis/code_quality.py`** - Best practices and error handling analysis
 - **`analysis/documentation.py`** - Documentation quality evaluation
-- **Security Analysis** - Extensible example for security practices
+- **`analysis/security.py`** - Security practices and vulnerability assessment
+- **`analysis/adaptability.py`** - Solution flexibility and configurability analysis
 
 ## 🔧 How It Works
 
@@ -83,20 +106,35 @@ The modular analyzer:
 
 ## 📊 Scoring Methodology
 
-- **Objective criteria**: Each module uses specific, measurable factors
+- **Objective criteria**: Each module uses specific, measurable factors with detailed rubrics
 - **Plugin consistency**: All analyzers implement the same `BaseAnalyzer` interface
-- **Configurable weights**: Adjust importance of different analysis dimensions
+- **Interactive weight adjustment**: Real-time customization with automatic redistribution
+- **Smart weight management**: Ensures weights always total exactly 100%
 - **Detailed explanations**: Every score includes reasoning and supporting evidence
 - **Extensible scoring**: Easy to add new analysis types without changing core code
+- **Live recalculation**: Rankings and metrics update instantly when weights change
 
 ## 🎮 Interactive Dashboard Features
 
+### 📊 **Real-time Analysis Controls**
+- **Interactive Weight Sliders**: Adjust importance of each analysis dimension with live updates
+- **Smart Weight Distribution**: Automatic proportional redistribution ensuring 100% total
+- **Preset Weight Configurations**: Quick-apply common analysis scenarios
+- **Modal Help System**: Comprehensive guidance for weight selection strategies
+
+### 📈 **Visual Analytics**
 - **Multi-dimensional comparison** with radar charts and bar graphs
-- **Detailed breakdowns** for each analysis module
-- **Category-specific rankings** showing strengths and weaknesses
-- **Code metrics visualization** (lines, files, complexity)
-- **Expandable details** for deep-dive analysis
-- **Responsive design** works on desktop and mobile
+- **Live Score Updates**: Rankings, highest/average scores update instantly with weight changes
+- **Color-coded Analysis Sections** for easy identification of strengths/weaknesses
+- **Category-specific Rankings** showing detailed performance breakdown
+- **Code Metrics Visualization** (lines, files, complexity)
+
+### 🎨 **User Experience**
+- **Collapsible Advanced Controls**: Clean interface with progressive disclosure
+- **Expandable Detail Sections** for deep-dive analysis
+- **Smooth Animations** with visual feedback for all interactions
+- **Responsive Design** optimized for desktop and mobile
+- **Advanced Badge System** clearly marking sophisticated features
 
 ## 🚀 Extending the System
 
@@ -126,10 +164,23 @@ results = analyzer.analyze_all_solutions()
 ## 📈 Potential Extensions
 
 The modular architecture enables easy addition of:
-- **Runtime Performance** - Actual execution benchmarking
-- **Security Analysis** - Vulnerability and safety assessment  
-- **Maintainability** - Code complexity and refactoring metrics
-- **Testing Coverage** - Unit test quality and coverage analysis
-- **Compliance** - Organizational standard adherence
+- **Runtime Performance** - Actual execution benchmarking with timing analysis
+- **Advanced Security Analysis** - Vulnerability scanning and threat modeling
+- **Maintainability Metrics** - Code complexity, cyclomatic complexity, and refactoring indicators
+- **Testing Coverage** - Unit test quality, coverage analysis, and test completeness
+- **Compliance Analysis** - Organizational standard adherence and regulatory compliance
+- **Cross-platform Compatibility** - Multi-OS testing and environment analysis
+- **Memory Usage Analysis** - Resource consumption and optimization opportunities
 
-The analyzer is designed to be fair, objective, and easily extensible for different types of code comparison tasks.
+### 🎛️ **Weight Configuration Guide**
+
+Use different weight presets based on your analysis goals:
+
+- **Balanced** (Default): Equal weight for comprehensive analysis
+- **Security First**: When security and compliance are paramount
+- **Performance Focus**: For high-performance applications requiring speed
+- **Enterprise**: Documentation-heavy environments with strict requirements
+- **Agile Development**: Fast iteration with emphasis on adaptability
+- **Maintenance**: Long-term code maintenance and readability priority
+
+The analyzer is designed to be fair, objective, and easily extensible for different types of code comparison tasks with real-time customization capabilities.

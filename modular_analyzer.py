@@ -16,10 +16,11 @@ from typing import List, Dict, Any
 from analysis.base import FileInfo, AnalysisScore, AnalysisRegistry
 from analysis.performance import PerformanceAnalyzer
 from analysis.readability import ReadabilityAnalyzer
-from analysis.prompt_adherence import PromptAdherenceAnalyzer
 from analysis.code_quality import CodeQualityAnalyzer
 from analysis.documentation import DocumentationAnalyzer
 from analysis.requirements_traceability import RequirementsTraceabilityAnalyzer
+from analysis.security import SecurityAnalyzer
+from analysis.adaptability import AdaptabilityAnalyzer
 
 @dataclass
 class LLMAnalysisResult:
@@ -37,13 +38,15 @@ class LLMAnalysisResult:
         total_weighted_score = 0.0
         total_weight = 0.0
         
-        # Get weights from the analyzers (we'll need to store them)
+        # Get weights from the analyzers - updated with Security and Adaptability Analyzers
         weights = {
-            'Performance Analysis': 0.25,
-            'Readability Analysis': 0.20,
-            'Prompt Adherence Analysis': 0.25,
-            'Code Quality Analysis': 0.15,
-            'Documentation Analysis': 0.10
+            'Performance Analysis': 0.20,
+            'Readability Analysis': 0.15,
+            'Requirements Traceability Analysis': 0.25,
+            'Code Quality Analysis': 0.10,
+            'Documentation Analysis': 0.05,
+            'Security Analysis': 0.15,
+            'Adaptability Analysis': 0.10
         }
         
         for analyzer_name, score in self.analysis_scores.items():
@@ -76,10 +79,11 @@ class ModularLLMAnalyzer:
         """Register the default set of analyzers"""
         self.registry.register(PerformanceAnalyzer())
         self.registry.register(ReadabilityAnalyzer())
-        self.registry.register(PromptAdherenceAnalyzer())
         self.registry.register(CodeQualityAnalyzer())
         self.registry.register(DocumentationAnalyzer())
         self.registry.register(RequirementsTraceabilityAnalyzer())
+        self.registry.register(SecurityAnalyzer())
+        self.registry.register(AdaptabilityAnalyzer())
     
     def _parse_prompt_requirements(self) -> Dict[str, Any]:
         """Parse the original prompt to extract requirements"""

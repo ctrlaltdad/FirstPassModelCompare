@@ -148,6 +148,63 @@ class DashboardGenerator:
         
         print(f"Dashboard generated: {output_path}")
     
+    def _generate_weight_controls(self, analyzer_categories: List[str], results: List[Dict]) -> str:
+        """Generate HTML for weight controls"""
+        
+        # Default weights - extract from the first result if available
+        default_weights = {
+            'Adaptability Analysis': 10,
+            'Code Quality Analysis': 10,
+            'Documentation Analysis': 5,
+            'Performance Analysis': 20,
+            'Readability Analysis': 15,
+            'Requirements Traceability Analysis': 25,
+            'Security Analysis': 15
+        }
+        
+        controls = []
+        
+        for category in analyzer_categories:
+            # Get icon for category
+            icon = self._get_category_icon(category)
+            # Get default weight
+            weight = default_weights.get(category, 10)
+            # Create clean ID for the category
+            category_id = category.lower().replace(' ', '_').replace('_analysis', '')
+            
+            controls.append(f'''
+            <div class="weight-item">
+                <div class="weight-label">
+                    <span>{icon} {category.replace(' Analysis', '')}</span>
+                    <span class="weight-value" id="{category_id}_value">{weight}%</span>
+                </div>
+                <input type="range" min="0" max="50" value="{weight}" 
+                       class="weight-slider" id="{category_id}_slider"
+                       oninput="updateWeight('{category_id}', '{category}', this.value)">
+            </div>
+            ''')
+        
+        return ''.join(controls)
+    
+    def _generate_initial_weights_js(self, analyzer_categories: List[str]) -> str:
+        """Generate JavaScript object for initial weights"""
+        default_weights = {
+            'Adaptability Analysis': 10,
+            'Code Quality Analysis': 10,
+            'Documentation Analysis': 5,
+            'Performance Analysis': 20,
+            'Readability Analysis': 15,
+            'Requirements Traceability Analysis': 25,
+            'Security Analysis': 15
+        }
+        
+        weights_js = []
+        for category in analyzer_categories:
+            weight = default_weights.get(category, 10)
+            weights_js.append(f'"{category}": {weight}')
+        
+        return ',\n            '.join(weights_js)
+    
     def _generate_html_template(self, llm_names: List[str], overall_scores: List[float], 
                               llm_datasets: List[Dict], analyzer_categories: List[str],
                               results: List[Dict], timestamp: str) -> str:
@@ -155,6 +212,9 @@ class DashboardGenerator:
         
         # Generate detailed results table
         results_table = self._generate_results_table(results, analyzer_categories, overall_scores)
+        
+        # Generate weight controls
+        weight_controls_html = self._generate_weight_controls(analyzer_categories, results)
         
         return f"""<!DOCTYPE html>
 <html lang="en">
@@ -287,10 +347,99 @@ class DashboardGenerator:
         .details-content {{
             display: none;
             margin-top: 10px;
-            padding: 15px;
+            padding: 20px;
             background-color: #f7fafc;
-            border-radius: 5px;
+            border-radius: 8px;
             border-left: 4px solid #4299e1;
+        }}
+        
+        .analysis-section {{
+            background: white;
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }}
+        
+        .analysis-section h4 {{
+            margin: 0 0 12px 0;
+            color: #2d3748;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+            font-size: 1.1em;
+        }}
+        
+        .score-display {{
+            background: #4299e1;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }}
+        
+        .key-points {{
+            margin: 0;
+            padding: 0;
+        }}
+        
+        .key-points li {{
+            margin: 6px 0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            list-style: none;
+            position: relative;
+            padding-left: 25px;
+        }}
+        
+        .key-points li.positive {{
+            background-color: #f0fff4;
+            border-left: 3px solid #38a169;
+        }}
+        
+        .key-points li.negative {{
+            background-color: #fffaf0;
+            border-left: 3px solid #ed8936;
+        }}
+        
+        .key-points li.warning {{
+            background-color: #fef5e7;
+            border-left: 3px solid #f6ad55;
+        }}
+        
+        .key-points li.info {{
+            background-color: #ebf8ff;
+            border-left: 3px solid #4299e1;
+        }}
+        
+        .key-points li.success {{
+            background-color: #f0fff4;
+            border-left: 3px solid #48bb78;
+        }}
+        
+        .key-points li.error {{
+            background-color: #fed7d7;
+            border-left: 3px solid #e53e3e;
+        }}
+        
+        .file-structure {{
+            background: #f7fafc;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }}
+        
+        .file-structure ul {{
+            margin: 0;
+            padding-left: 20px;
+        }}
+        
+        .analysis-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
         }}
         
         .metric-grid {{
@@ -318,6 +467,236 @@ class DashboardGenerator:
             color: #718096;
             font-size: 0.9em;
             margin-top: 5px;
+        }}
+        
+        .weight-controls {{
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }}
+        
+        .weight-controls h3 {{
+            margin-top: 0;
+            color: #4a5568;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }}
+        
+        .weight-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }}
+        
+        .weight-item {{
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }}
+        
+        .weight-label {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #2d3748;
+        }}
+        
+        .weight-value {{
+            background: #4299e1;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            min-width: 45px;
+            text-align: center;
+        }}
+        
+        .weight-slider {{
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+        }}
+        
+        .weight-slider::-webkit-slider-thumb {{
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4299e1;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }}
+        
+        .weight-slider::-moz-range-thumb {{
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4299e1;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }}
+        
+        .weight-total {{
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            background: #f7fafc;
+            border-radius: 8px;
+            font-weight: 600;
+        }}
+        
+        .weight-warning {{
+            color: #e53e3e;
+        }}
+        
+        .weight-good {{
+            color: #38a169;
+        }}
+        
+        .weight-item.changing {{
+            background-color: #bee3f8;
+            transform: scale(1.02);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }}
+        
+        .redistribution-info {{
+            animation: slideIn 0.3s ease-out;
+        }}
+        
+        @keyframes slideIn {{
+            from {{
+                transform: translateX(100%);
+                opacity: 0;
+            }}
+            to {{
+                transform: translateX(0);
+                opacity: 1;
+            }}
+        }}
+        
+        .weight-modal {{
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }}
+        
+        .modal-content {{
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+        }}
+        
+        .modal-header {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 15px;
+        }}
+        
+        .modal-title {{
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #2d3748;
+        }}
+        
+        .close-modal {{
+            background: none;
+            border: none;
+            font-size: 2em;
+            color: #718096;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }}
+        
+        .close-modal:hover {{
+            color: #2d3748;
+        }}
+        
+        .modal-section {{
+            margin-bottom: 20px;
+        }}
+        
+        .modal-section h4 {{
+            color: #4a5568;
+            margin-bottom: 10px;
+        }}
+        
+        .preset-buttons {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }}
+        
+        .preset-btn {{
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.2s;
+        }}
+        
+        .preset-btn:hover {{
+            background: #edf2f7;
+            border-color: #4299e1;
+        }}
+        
+        .preset-btn.active {{
+            background: #e6fffa;
+            border-color: #38a169;
+            color: #234e52;
+        }}
+        
+        .weight-help {{
+            background: #ebf8ff;
+            border-left: 4px solid #4299e1;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }}
+        
+        .redistribution-info {{
+            background: #fffaf0;
+            border-left: 4px solid #ed8936;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }}
+        
+        .weight-item.changing {{
+            background: #fef5e7;
+            border-radius: 8px;
+            padding: 8px;
+            transition: background-color 0.3s;
         }}
         
         @media (max-width: 768px) {{
@@ -357,6 +736,83 @@ class DashboardGenerator:
         </div>
     </div>
     
+    <div class="weight-controls">
+        <h3>⚖️ Analysis Weight Controls</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <p style="color: #718096; margin: 0;">Adjust the importance of each analysis dimension - weights automatically balance to 100%</p>
+            <button onclick="openWeightModal()" style="background: #4299e1; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 0.9em;">
+                💡 Weight Guide
+            </button>
+        </div>
+        
+        <div class="weight-grid">
+            {weight_controls_html}
+        </div>
+        
+        <div class="weight-total">
+            Total Weight: <span id="totalWeight">100</span>%
+            <span id="weightStatus" class="weight-good">✓ Balanced</span>
+        </div>
+    </div>
+    
+    <!-- Weight Guide Modal -->
+    <div id="weightModal" class="weight-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">⚖️ Weight Distribution Guide</h3>
+                <button class="close-modal" onclick="closeWeightModal()">&times;</button>
+            </div>
+            
+            <div class="modal-section">
+                <div class="weight-help">
+                    <strong>🎯 How It Works:</strong><br>
+                    When you adjust any weight, the system automatically redistributes the remaining weights proportionally to maintain 100% total.
+                    This ensures fair comparison while respecting your priorities.
+                </div>
+            </div>
+            
+            <div class="modal-section">
+                <h4>📋 Quick Presets</h4>
+                <div class="preset-buttons">
+                    <div class="preset-btn" onclick="applyPreset('balanced')">
+                        <strong>🏛️ Balanced</strong><br>
+                        <small>Equal focus on all dimensions</small>
+                    </div>
+                    <div class="preset-btn" onclick="applyPreset('security')">
+                        <strong>🔒 Security First</strong><br>
+                        <small>Prioritize security & compliance</small>
+                    </div>
+                    <div class="preset-btn" onclick="applyPreset('performance')">
+                        <strong>⚡ Performance</strong><br>
+                        <small>Speed & efficiency focused</small>
+                    </div>
+                    <div class="preset-btn" onclick="applyPreset('enterprise')">
+                        <strong>🏢 Enterprise</strong><br>
+                        <small>Documentation & requirements</small>
+                    </div>
+                    <div class="preset-btn" onclick="applyPreset('agile')">
+                        <strong>🚀 Agile Development</strong><br>
+                        <small>Adaptability & code quality</small>
+                    </div>
+                    <div class="preset-btn" onclick="applyPreset('maintenance')">
+                        <strong>🔧 Maintenance</strong><br>
+                        <small>Readability & documentation</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-section">
+                <h4>💡 Tips</h4>
+                <ul style="color: #4a5568; line-height: 1.6;">
+                    <li><strong>Start with presets</strong> then fine-tune for your specific needs</li>
+                    <li><strong>Watch the rankings change</strong> as you adjust weights</li>
+                    <li><strong>Higher weights</strong> make that dimension more influential in the final score</li>
+                    <li><strong>Zero weight</strong> excludes that dimension from scoring entirely</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
     <div class="dashboard-grid">
         <div class="chart-container">
             <h3>📊 Overall Performance Ranking</h3>
@@ -375,9 +831,328 @@ class DashboardGenerator:
     </div>
     
     <script>
+        // Weight management with smart redistribution
+        let currentWeights = {{
+            {self._generate_initial_weights_js(analyzer_categories)}
+        }};
+        
+        let originalScores = {json.dumps(results)};
+        let chartInstances = {{}};
+        let isUpdating = false; // Prevent recursive updates
+        
+        function updateWeight(categoryId, categoryName, value) {{
+            if (isUpdating) return;
+            
+            const newValue = parseInt(value);
+            const oldValue = currentWeights[categoryName];
+            const difference = newValue - oldValue;
+            
+            // Update the current weight
+            currentWeights[categoryName] = newValue;
+            
+            // Smart redistribution of remaining weights
+            redistributeWeights(categoryName, difference);
+            
+            // Update UI
+            updateAllWeightDisplays();
+            
+            // Add visual feedback
+            highlightChangingWeight(categoryId);
+            
+            // Recalculate scores
+            recalculateScores();
+        }}
+        
+        function redistributeWeights(changedCategory, difference) {{
+            const otherCategories = Object.keys(currentWeights).filter(cat => cat !== changedCategory);
+            const totalOtherWeights = otherCategories.reduce((sum, cat) => sum + currentWeights[cat], 0);
+            
+            if (totalOtherWeights === 0) {{
+                // If all other weights are 0, distribute evenly
+                const remainingWeight = 100 - currentWeights[changedCategory];
+                const weightPerCategory = Math.floor(remainingWeight / otherCategories.length);
+                let remainder = remainingWeight % otherCategories.length;
+                
+                otherCategories.forEach((cat, index) => {{
+                    currentWeights[cat] = weightPerCategory + (index < remainder ? 1 : 0);
+                }});
+            }} else {{
+                // Proportional redistribution
+                const targetTotal = 100 - currentWeights[changedCategory];
+                const scaleFactor = targetTotal / totalOtherWeights;
+                
+                otherCategories.forEach(cat => {{
+                    currentWeights[cat] = Math.round(currentWeights[cat] * scaleFactor);
+                }});
+                
+                // Ensure exactly 100% total
+                ensureExact100Percent();
+            }}
+        }}
+        
+        function ensureExact100Percent() {{
+            const total = Object.values(currentWeights).reduce((sum, weight) => sum + weight, 0);
+            const difference = 100 - total;
+            
+            if (difference !== 0) {{
+                // Find the category with the highest weight to adjust
+                const sortedCategories = Object.keys(currentWeights)
+                    .sort((a, b) => currentWeights[b] - currentWeights[a]);
+                
+                currentWeights[sortedCategories[0]] += difference;
+            }}
+        }}
+        
+        function updateAllWeightDisplays() {{
+            isUpdating = true;
+            
+            Object.keys(currentWeights).forEach(category => {{
+                const categoryId = category.toLowerCase().replace(' ', '_').replace('_analysis', '');
+                const slider = document.getElementById(categoryId + '_slider');
+                const valueDisplay = document.getElementById(categoryId + '_value');
+                
+                if (slider && valueDisplay) {{
+                    slider.value = currentWeights[category];
+                    valueDisplay.textContent = currentWeights[category] + '%';
+                }}
+            }});
+            
+            // Update total weight display (should always be 100)
+            const totalElement = document.getElementById('totalWeight');
+            const statusElement = document.getElementById('weightStatus');
+            
+            totalElement.textContent = '100';
+            statusElement.textContent = '✓ Balanced';
+            statusElement.className = 'weight-good';
+            
+            isUpdating = false;
+        }}
+        
+        function highlightChangingWeight(categoryId) {{
+            const weightItem = document.getElementById(categoryId + '_slider').closest('.weight-item');
+            if (weightItem) {{
+                weightItem.classList.add('changing');
+                setTimeout(() => {{
+                    weightItem.classList.remove('changing');
+                }}, 300);
+            }}
+        }}
+        
+        // Modal functions
+        function openWeightModal() {{
+            document.getElementById('weightModal').style.display = 'block';
+        }}
+        
+        function closeWeightModal() {{
+            document.getElementById('weightModal').style.display = 'none';
+        }}
+        
+        // Preset weight configurations
+        const presets = {{
+            balanced: {{
+                'Adaptability Analysis': 14,
+                'Code Quality Analysis': 14,
+                'Documentation Analysis': 14,
+                'Performance Analysis': 15,
+                'Readability Analysis': 14,
+                'Requirements Traceability Analysis': 15,
+                'Security Analysis': 14
+            }},
+            security: {{
+                'Adaptability Analysis': 5,
+                'Code Quality Analysis': 15,
+                'Documentation Analysis': 10,
+                'Performance Analysis': 15,
+                'Readability Analysis': 10,
+                'Requirements Traceability Analysis': 20,
+                'Security Analysis': 25
+            }},
+            performance: {{
+                'Adaptability Analysis': 15,
+                'Code Quality Analysis': 15,
+                'Documentation Analysis': 5,
+                'Performance Analysis': 30,
+                'Readability Analysis': 10,
+                'Requirements Traceability Analysis': 15,
+                'Security Analysis': 10
+            }},
+            enterprise: {{
+                'Adaptability Analysis': 8,
+                'Code Quality Analysis': 12,
+                'Documentation Analysis': 20,
+                'Performance Analysis': 15,
+                'Readability Analysis': 15,
+                'Requirements Traceability Analysis': 25,
+                'Security Analysis': 5
+            }},
+            agile: {{
+                'Adaptability Analysis': 25,
+                'Code Quality Analysis': 20,
+                'Documentation Analysis': 5,
+                'Performance Analysis': 20,
+                'Readability Analysis': 15,
+                'Requirements Traceability Analysis': 10,
+                'Security Analysis': 5
+            }},
+            maintenance: {{
+                'Adaptability Analysis': 10,
+                'Code Quality Analysis': 15,
+                'Documentation Analysis': 25,
+                'Performance Analysis': 10,
+                'Readability Analysis': 25,
+                'Requirements Traceability Analysis': 10,
+                'Security Analysis': 5
+            }}
+        }};
+        
+        function applyPreset(presetName) {{
+            const preset = presets[presetName];
+            if (preset) {{
+                // Update weights
+                Object.keys(preset).forEach(category => {{
+                    if (currentWeights.hasOwnProperty(category)) {{
+                        currentWeights[category] = preset[category];
+                    }}
+                }});
+                
+                // Update displays
+                updateAllWeightDisplays();
+                
+                // Recalculate scores
+                recalculateScores();
+                
+                // Visual feedback
+                document.querySelectorAll('.preset-btn').forEach(btn => {{
+                    btn.classList.remove('active');
+                }});
+                event.target.closest('.preset-btn').classList.add('active');
+                
+                // Show redistribution info
+                showRedistributionInfo(`Applied ${{presetName}} preset`);
+            }}
+        }}
+        
+        function showRedistributionInfo(message) {{
+            const info = document.createElement('div');
+            info.className = 'redistribution-info';
+            info.textContent = message;
+            info.style.position = 'fixed';
+            info.style.top = '20px';
+            info.style.right = '20px';
+            info.style.zIndex = '1001';
+            info.style.padding = '15px';
+            info.style.backgroundColor = '#38a169';
+            info.style.color = 'white';
+            info.style.borderRadius = '8px';
+            info.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+            
+            document.body.appendChild(info);
+            
+            setTimeout(() => {{
+                info.style.opacity = '0';
+                setTimeout(() => {{
+                    if (info.parentNode) {{
+                        info.parentNode.removeChild(info);
+                    }}
+                }}, 300);
+            }}, 2000);
+        }}
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {{
+            const modal = document.getElementById('weightModal');
+            if (event.target === modal) {{
+                closeWeightModal();
+            }}
+        }}
+        
+        function recalculateScores() {{
+            // Recalculate overall scores for each LLM
+            const newOverallScores = [];
+            const llmNames = {json.dumps(llm_names)};
+            
+            originalScores.forEach((result, index) => {{
+                let weightedSum = 0;
+                let totalWeight = 0;
+                
+                const analysisScores = result.analysis_scores || {{}};
+                Object.keys(currentWeights).forEach(category => {{
+                    const weight = currentWeights[category] / 100;
+                    const score = analysisScores[category]?.score || 0;
+                    weightedSum += score * weight;
+                    totalWeight += weight;
+                }});
+                
+                const overallScore = totalWeight > 0 ? weightedSum / totalWeight : 0;
+                newOverallScores.push(overallScore);
+                
+                // Update the score display in the table
+                const scoreElement = document.querySelector(`#score-${{result.llm_name}}`);
+                if (scoreElement) {{
+                    scoreElement.textContent = overallScore.toFixed(1);
+                }}
+            }});
+            
+            // Sort results by new scores and update rankings
+            const sortedResults = originalScores.map((result, index) => ({{
+                ...result,
+                newScore: newOverallScores[index]
+            }})).sort((a, b) => b.newScore - a.newScore);
+            
+            // Update table rankings
+            updateTableRankings(sortedResults);
+            
+            // Update charts
+            updateCharts(llmNames, newOverallScores);
+        }}
+        
+        function updateTableRankings(sortedResults) {{
+            // Update rank numbers in the table
+            sortedResults.forEach((result, index) => {{
+                const rankElement = document.querySelector(`#rank-${{result.llm_name}}`);
+                if (rankElement) {{
+                    rankElement.textContent = `#${{index + 1}}`;
+                }}
+            }});
+        }}
+        
+        function updateCharts(llmNames, newScores) {{
+            // Update overall performance chart
+            if (chartInstances.overallChart) {{
+                chartInstances.overallChart.data.datasets[0].data = newScores;
+                chartInstances.overallChart.update();
+            }}
+            
+            // Update category chart with new weights
+            if (chartInstances.categoryChart) {{
+                // Recalculate category data with new weights
+                const categoryData = [];
+                const categories = Object.keys(currentWeights);
+                
+                llmNames.forEach(llmName => {{
+                    const result = originalScores.find(r => r.llm_name === llmName);
+                    const scores = [];
+                    categories.forEach(category => {{
+                        const score = result?.analysis_scores[category]?.score || 0;
+                        scores.push(score);
+                    }});
+                    categoryData.push(scores);
+                }});
+                
+                // Update the chart datasets
+                categoryData.forEach((scores, index) => {{
+                    if (chartInstances.categoryChart.data.datasets[index]) {{
+                        chartInstances.categoryChart.data.datasets[index].data = scores;
+                    }}
+                }});
+                
+                chartInstances.categoryChart.update();
+            }}
+        }}
+        
         // Overall Performance Chart
         const overallCtx = document.getElementById('overallChart').getContext('2d');
-        new Chart(overallCtx, {{
+        chartInstances.overallChart = new Chart(overallCtx, {{
             type: 'bar',
             data: {{
                 labels: {json.dumps(llm_names)},
@@ -429,7 +1204,7 @@ class DashboardGenerator:
         
         // Category Comparison Chart
         const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-        new Chart(categoryCtx, {{
+        chartInstances.categoryChart = new Chart(categoryCtx, {{
             type: 'radar',
             data: {{
                 labels: {json.dumps([cat.replace(' Analysis', '') for cat in analyzer_categories])},
@@ -516,9 +1291,9 @@ class DashboardGenerator:
             
             rows.append(f"""
                 <tr>
-                    <td class="llm-rank">#{i}</td>
+                    <td class="llm-rank" id="rank-{llm_name}">#{i}</td>
                     <td><strong>{llm_name}</strong></td>
-                    <td><span class="score {score_class}">{overall_score:.1f}</span></td>
+                    <td><span class="score {score_class}" id="score-{llm_name}">{overall_score:.1f}</span></td>
                     {category_cells}
                     <td>
                         <button class="details-toggle" onclick="toggleDetails('{details_id}')">
@@ -556,51 +1331,120 @@ class DashboardGenerator:
         """
     
     def _generate_details_content(self, result: Dict, analyzer_categories: List[str]) -> str:
-        """Generate detailed content for each LLM result"""
+        """Generate detailed content for each LLM result with enhanced UX"""
         
         details = []
         
-        # File structure
+        # File structure section
         files = result.get('files', [])
         if files:
-            details.append("<h4>📁 File Structure</h4>")
-            details.append("<ul>")
+            details.append('<div class="analysis-section">')
+            details.append('<h4>📁 File Structure</h4>')
+            details.append('<div class="file-structure">')
+            details.append('<ul>')
             for file_info in files:
                 filename = os.path.basename(file_info.get('path', 'unknown'))
                 lines = file_info.get('lines', 0)
                 size = file_info.get('size', 0)
-                details.append(f"<li><strong>{filename}</strong>: {lines} lines, {size:,} bytes</li>")
-            details.append("</ul>")
+                details.append(f'<li><strong>{filename}</strong>: {lines} lines, {size:,} bytes</li>')
+            details.append('</ul>')
+            details.append('</div>')
+            details.append('</div>')
+        
+        # Analysis grid container
+        details.append('<div class="analysis-grid">')
         
         # Analysis details
         analysis_scores = result.get('analysis_scores', {})
         for category in analyzer_categories:
             score_data = analysis_scores.get(category, {})
             if isinstance(score_data, dict):
-                details.append(f"<h4>🔍 {category}</h4>")
-                details.append(f"<p><strong>Score:</strong> {score_data.get('score', 0):.1f}/100</p>")
+                details.append('<div class="analysis-section">')
+                
+                # Get appropriate icon for each category
+                icon = self._get_category_icon(category)
+                details.append(f'<h4>{icon} {category}</h4>')
+                details.append(f'<div class="score-display">{score_data.get("score", 0):.1f}/100</div>')
                 
                 # Add notes
                 notes = score_data.get('notes', [])
                 
-                # Special handling for Requirements Traceability Analysis
-                if category == "Requirements Traceability Analysis":
-                    # For Requirements Traceability, the summary notes are in max_score
+                # Special handling for analyzers that store summary in max_score
+                if category in ["Requirements Traceability Analysis", "Security Analysis", "Adaptability Analysis"]:
                     max_score_data = score_data.get('max_score', [])
                     if isinstance(max_score_data, list):
                         notes = max_score_data
                 
                 if notes and isinstance(notes, list):
-                    details.append("<p><strong>Key Points:</strong></p>")
-                    details.append("<ul>")
-                    # Show more notes for Requirements Traceability to include methodology insights
-                    max_notes = 15 if category == "Requirements Traceability Analysis" else 5
+                    details.append('<ul class="key-points">')
+                    max_notes = 15 if category in ["Requirements Traceability Analysis", "Security Analysis", "Adaptability Analysis"] else 5
                     for note in notes[:max_notes]:
                         if note.strip():  # Skip empty strings
-                            details.append(f"<li>{note}</li>")
-                    details.append("</ul>")
+                            css_class = self._get_note_css_class(note)
+                            details.append(f'<li class="{css_class}">{note}</li>')
+                    details.append('</ul>')
+                
+                details.append('</div>')
+        
+        details.append('</div>')  # Close analysis-grid
         
         return "".join(details)
+    
+    def _get_category_icon(self, category: str) -> str:
+        """Get appropriate icon for each analysis category"""
+        icons = {
+            'Adaptability Analysis': '🔧',
+            'Code Quality Analysis': '🏗️',
+            'Documentation Analysis': '📚',
+            'Performance Analysis': '⚡',
+            'Readability Analysis': '📖',
+            'Requirements Traceability Analysis': '📋',
+            'Security Analysis': '🔒'
+        }
+        return icons.get(category, '🔍')
+    
+    def _get_note_css_class(self, note: str) -> str:
+        """Determine CSS class based on note content"""
+        note_lower = note.lower().strip()
+        
+        # Positive indicators
+        if (note.startswith('+') or 
+            note.startswith('✓') or
+            'excellent' in note_lower or
+            'comprehensive' in note_lower or
+            'good' in note_lower and not 'no' in note_lower):
+            return 'positive'
+        
+        # Negative indicators  
+        elif (note.startswith('-') or
+              note.startswith('❌') or
+              'no ' in note_lower or
+              'limited' in note_lower or
+              'missing' in note_lower):
+            return 'negative'
+        
+        # Warning indicators
+        elif (note.startswith('⚡') or
+              'medium' in note_lower or
+              'warning' in note_lower):
+            return 'warning'
+        
+        # Success indicators
+        elif (note.startswith('Requirements Implementation:') or
+              note.startswith('Mandatory Requirements:') or
+              'all mandatory requirements' in note_lower or
+              note.lower().startswith('✓')):
+            return 'success'
+        
+        # Error indicators
+        elif ('critical' in note_lower or
+              'error' in note_lower or
+              'failed' in note_lower):
+            return 'error'
+        
+        # Default to info
+        else:
+            return 'info'
 
 def main():
     """Main function to generate dashboard from latest analysis"""
