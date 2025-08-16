@@ -46,12 +46,6 @@ This will:
 - ✅ Open results in browser with real-time weight controls
 - ✅ Provide smart weight redistribution and preset configurations
 
-### Advanced Options (Optional)
-```bash
-# Demonstration with additional security module
-python demo_modular_system.py
-```
-
 ## 📁 Generated Files
 
 Each analysis run creates:
@@ -81,8 +75,7 @@ The system uses a plugin-based architecture for easy extensibility:
 ### Core Components
 - **`analysis/base.py`** - Abstract base classes and registry system
 - **`modular_analyzer.py`** - Main orchestrator using plugin architecture  
-- **`dashboard_generator.py`** - Interactive HTML dashboard generator
-- **`demo_modular_system.py`** - Complete demonstration with extensibility examples
+- **`dashboard_generator.py`** - Interactive HTML dashboard generator with real-time controls
 
 ### Analysis Modules (Plugins)
 - **`analysis/performance.py`** - Algorithmic efficiency evaluation
@@ -143,21 +136,24 @@ Adding new analysis modules is simple:
 ```python
 from analysis.base import BaseAnalyzer, AnalysisScore
 
-class YourAnalyzer(BaseAnalyzer):
+class YourCustomAnalyzer(BaseAnalyzer):
     def __init__(self):
         super().__init__(
-            name="Your Analysis",
-            description="What your analyzer does",
+            name="Your Custom Analysis",
+            description="Description of what your analyzer evaluates",
             weight=0.15  # 15% of total score
         )
     
     def analyze(self, files, llm_name, prompt_requirements):
-        # Your analysis logic here
-        return AnalysisScore(score=85.0, notes=["Your analysis results"])
+        # Your custom analysis logic here
+        score = 85.0  # Calculate your score
+        notes = ["Your analysis findings and reasoning"]
+        return AnalysisScore(score=score, notes=notes)
 
-# Register and run
+# Usage example:
+workspace_path = r"your\workspace\path"
 analyzer = ModularLLMAnalyzer(workspace_path)
-analyzer.registry.register(YourAnalyzer())
+analyzer.registry.register(YourCustomAnalyzer())
 results = analyzer.analyze_all_solutions()
 ```
 
