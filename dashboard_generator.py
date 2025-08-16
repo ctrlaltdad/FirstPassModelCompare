@@ -484,6 +484,55 @@ class DashboardGenerator:
             padding-bottom: 10px;
         }}
         
+        .weight-controls-header {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }}
+        
+        .weight-controls-header:hover {{
+            color: #2d3748;
+        }}
+        
+        .collapse-toggle {{
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+            color: #4299e1;
+            transition: transform 0.3s ease;
+            padding: 0;
+            margin: 0;
+        }}
+        
+        .collapse-toggle.collapsed {{
+            transform: rotate(-90deg);
+        }}
+        
+        .weight-controls-content {{
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            max-height: 0;
+            opacity: 0;
+        }}
+        
+        .weight-controls-content.expanded {{
+            max-height: 1000px;
+            opacity: 1;
+        }}
+        
+        .advanced-badge {{
+            background: #4299e1;
+            color: white;
+            font-size: 0.75em;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-left: 8px;
+            font-weight: 500;
+        }}
+        
         .weight-grid {{
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -737,13 +786,21 @@ class DashboardGenerator:
     </div>
     
     <div class="weight-controls">
-        <h3>⚖️ Analysis Weight Controls</h3>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <p style="color: #718096; margin: 0;">Adjust the importance of each analysis dimension - weights automatically balance to 100%</p>
-            <button onclick="openWeightModal()" style="background: #4299e1; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 0.9em;">
-                💡 Weight Guide
-            </button>
+        <div class="weight-controls-header" onclick="toggleWeightControls()">
+            <h3 style="margin: 0; border: none; padding: 0;">
+                ⚖️ Analysis Weight Controls
+                <span class="advanced-badge">Advanced</span>
+            </h3>
+            <button class="collapse-toggle collapsed" id="weight-toggle">▼</button>
         </div>
+        
+        <div class="weight-controls-content" id="weight-controls-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; margin-top: 15px;">
+                <p style="color: #718096; margin: 0;">Adjust the importance of each analysis dimension - weights automatically balance to 100%</p>
+                <button onclick="openWeightModal()" style="background: #4299e1; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 0.9em;">
+                    💡 Weight Guide
+                </button>
+            </div>
         
         <div class="weight-grid">
             {weight_controls_html}
@@ -753,6 +810,7 @@ class DashboardGenerator:
             Total Weight: <span id="totalWeight">100</span>%
             <span id="weightStatus" class="weight-good">✓ Balanced</span>
         </div>
+        </div> <!-- Close weight-controls-content -->
     </div>
     
     <!-- Weight Guide Modal -->
@@ -1234,6 +1292,20 @@ class DashboardGenerator:
                 }}
             }}
         }});
+        
+        // Toggle weight controls visibility
+        function toggleWeightControls() {{
+            const content = document.getElementById('weight-controls-content');
+            const toggle = document.getElementById('weight-toggle');
+            
+            if (content.classList.contains('expanded')) {{
+                content.classList.remove('expanded');
+                toggle.classList.add('collapsed');
+            }} else {{
+                content.classList.add('expanded');
+                toggle.classList.remove('collapsed');
+            }}
+        }}
         
         // Toggle details functionality
         function toggleDetails(id) {{

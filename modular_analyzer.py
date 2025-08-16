@@ -398,6 +398,11 @@ def main():
     # Convert results to dashboard format
     dashboard_data = {
         "analysis_timestamp": datetime.now().isoformat(),
+        "analyzers_used": [
+            {"name": info['name'], "weight": info['weight']} 
+            for info in analyzer.registry.list_analyzers() 
+            if info['enabled']
+        ],
         "results": [
             {
                 "llm_name": r.llm_name,
