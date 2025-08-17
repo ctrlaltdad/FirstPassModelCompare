@@ -1,10 +1,57 @@
 # Modular LLM Solution Analyzer
 
-A comprehensive, extensible framework for comparing and analyzing AI-generated code solutions using a plugin-based architecture with interactive weight controls and real-time analysis.
+A comprehensive, extensible framework for comparing and an## 📊 Example Results
+
+Based on analysis with 7-dimensional scoring (your results will vary based on your LLM solutions):
+
+| Rank | LLM | Score | Key Strengths |
+|------|-----|-------|---------------|
+| 🥇 1 | LLM1 | 83.6 | Excellent security & requirements compliance |
+| 🥈 2 | LLM4 | 83.1 | Outstanding code quality & comprehensive documentation |
+| 🥉 3 | LLM3 | 81.9 | Perfect readability & documentation |
+| 4 | LLM2 | 75.9 | Strong requirements traceability & security |
+
+*Rankings change based on your weight preferences - use the interactive controls to explore different scenarios!*enerated code solutions using a plugin-based architecture with interactive weight controls and real-time analysis.
+
+## 🚀 Getting Started
+
+### Step 1: Prepare Your LLM Solutions
+1. **Create LLM folders**: Create up to 4 folders named `llm1`, `llm2`, `llm3`, `llm4`
+2. **Add your solutions**: Place each LLM's generated files in their respective folder:
+   - Code files (.ps1, .py, .js, etc.)
+   - Documentation files (README.md, help files)
+   - Any supporting files (batch scripts, config files)
+3. **Update the prompt**: Edit the prompt in your analysis files to match what you provided to the LLMs
+
+### Step 2: Run the Analysis
+```bash
+python modular_analyzer.py
+```
+
+### Step 3: View Results
+- Interactive dashboard opens automatically in your browser
+- Adjust weights in real-time to explore different analysis scenarios
+- Export reports in multiple formats (CSV, JSON, Markdown)
+
+### Example Structure:
+```
+your-project/
+├── llm1/           # llm1's solution
+│   ├── script.py
+│   └── README.md
+├── llm2/           # llm2's solution
+│   ├── app.js
+│   └── docs.md
+├── llm3/           # llm3's solution
+│   └── solution.py
+└── llm4/           # llm4's solution
+    ├── main.py
+    └── requirements.txt
+```
 
 ## 🎯 What It Does
 
-This modular analyzer evaluates 4 different LLM solutions for the "Safe File Deletion Identifier" prompt across **7 configurable analysis dimensions**:
+This modular analyzer evaluates up to 4 different LLM solutions across **7 configurable analysis dimensions**:
 
 - **Requirements Traceability Analysis** (25% weight) - Requirements compliance and completeness tracking
 - **Performance Analysis** (20% weight) - Algorithm efficiency, optimization techniques, complexity analysis  
@@ -33,7 +80,7 @@ This modular analyzer evaluates 4 different LLM solutions for the "Safe File Del
 - **Visual Feedback**: Smooth animations and color-coded analysis sections
 - **Responsive Design**: Works seamlessly on desktop and mobile devices
 
-## 🚀 Quick Start
+## 🎮 Quick Start
 
 ### Simple One-Command Analysis
 ```bash
@@ -41,7 +88,7 @@ python modular_analyzer.py
 ```
 
 This will:
-- ✅ Run all 7 enabled analysis modules
+- ✅ Analyze all LLM solutions in your workspace
 - ✅ Generate comprehensive reports with interactive dashboard
 - ✅ Open results in browser with real-time weight controls
 - ✅ Provide smart weight redistribution and preset configurations

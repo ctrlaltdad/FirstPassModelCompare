@@ -170,16 +170,26 @@ class ModularLLMAnalyzer:
         """Analyze all LLM solutions"""
         results = []
         
-        llm_folders = ['llm1', 'llm2', 'llm3', 'llm4']
+        # Dynamically discover LLM folders instead of hardcoding
+        potential_folders = ['llm1', 'llm2', 'llm3', 'llm4']
+        existing_folders = []
         
-        for folder in llm_folders:
+        for folder in potential_folders:
             folder_path = os.path.join(self.workspace_path, folder)
             if os.path.exists(folder_path):
-                print(f"Analyzing {folder}...")
-                result = self.analyze_solution(folder)
-                results.append(result)
-            else:
-                print(f"Warning: {folder} not found")
+                existing_folders.append(folder)
+        
+        if not existing_folders:
+            print("Warning: No LLM folders found. Expected folders: llm1, llm2, llm3, llm4")
+            return results
+        
+        print(f"Found {len(existing_folders)} LLM solution(s): {', '.join(existing_folders)}")
+        
+        for folder in existing_folders:
+            folder_path = os.path.join(self.workspace_path, folder)
+            print(f"Analyzing {folder}...")
+            result = self.analyze_solution(folder)
+            results.append(result)
         
         return results
     
