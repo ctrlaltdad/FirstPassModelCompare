@@ -530,12 +530,218 @@
             transition: background-color 0.3s;
         }
         
+        .scoring-guide-btn {
+            background: #6b46c1;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            margin-left: 10px;
+            transition: background 0.2s;
+        }
+        
+        .scoring-guide-btn:hover {
+            background: #553c9a;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 30px;
+            border: none;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 700px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            cursor: pointer;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+        }
+        
+        .scoring-breakdown {
+            margin-top: 20px;
+        }
+        
+        .scoring-component {
+            background: #f8f9fa;
+            border-left: 4px solid #4299e1;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .component-name {
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+        
+        .component-description {
+            color: #4a5568;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .component-weight {
+            float: right;
+            background: #4299e1;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .component-breakdown {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #38b2ac;
+        }
+        
+        .component-scores {
+            list-style: none;
+            padding: 0;
+            margin: 5px 0;
+        }
+        
+        .component-scores li {
+            padding: 5px 0;
+            border-bottom: 1px solid #e2e8f0;
+            color: #4a5568;
+            font-size: 0.9em;
+        }
+        
+        .component-scores li:last-child {
+            border-bottom: none;
+        }
+        
+        .winner-summary {
+            background: linear-gradient(135deg, #48bb78 0%, #38b2ac 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+        }
+        
+        .winner-summary h2 {
+            margin: 0 0 15px 0;
+            font-size: 1.8em;
+            font-weight: 300;
+            text-align: center;
+        }
+        
+        .winner-details {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 25px;
+            align-items: start;
+        }
+        
+        .winner-score {
+            text-align: center;
+        }
+        
+        .winner-score .score {
+            font-size: 3.5em;
+            font-weight: bold;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .winner-score .label {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        
+        .winner-strengths {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .winner-strengths h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.3em;
+            color: rgba(255,255,255,0.95);
+        }
+        
+        .strength-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .strength-item {
+            background: rgba(255,255,255,0.1);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+        
+        .strength-item .strength-name {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .strength-item .strength-score {
+            opacity: 0.8;
+            font-size: 0.85em;
+        }
+        
         @media (max-width: 768px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
             
             .metric-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+                padding: 20px;
+            }
+            
+            .winner-details {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .strength-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -545,8 +751,46 @@
     <div class="header">
         <h1>🤖 LLM Solution Analysis Dashboard</h1>
         <p>Comprehensive comparison of AI-generated code solutions</p>
-        <p><small>Generated on: 2025-08-16T15:29:01.193210</small></p>
+        <p><small>Generated on: 2025-08-17T11:35:02.429424</small></p>
     </div>
+    
+    
+        <div class="winner-summary">
+            <h2>🏆 Top Performing Solution</h2>
+            <div class="winner-details">
+                <div class="winner-score">
+                    <div class="score">76.1</div>
+                    <div class="label">llm4</div>
+                </div>
+                <div class="winner-strengths">
+                    <h3>Key Strengths</h3>
+                    <div class="strength-grid">
+                        
+                <div class="strength-item">
+                    <div class="strength-name">Security</div>
+                    <div class="strength-score">100.0/100</div>
+                </div>
+            
+                <div class="strength-item">
+                    <div class="strength-name">Requirements Traceability</div>
+                    <div class="strength-score">99.5/100</div>
+                </div>
+            
+                <div class="strength-item">
+                    <div class="strength-name">Documentation</div>
+                    <div class="strength-score">85.0/100</div>
+                </div>
+            
+                <div class="strength-item">
+                    <div class="strength-name">Code Quality</div>
+                    <div class="strength-score">80.0/100</div>
+                </div>
+            
+                    </div>
+                </div>
+            </div>
+        </div>
+        
     
     <div class="metric-grid">
         <div class="metric-card">
@@ -558,11 +802,11 @@
             <div class="metric-label">Analysis Dimensions</div>
         </div>
         <div class="metric-card">
-            <div class="metric-value">83.9</div>
+            <div class="metric-value">76.1</div>
             <div class="metric-label">Highest Score</div>
         </div>
         <div class="metric-card">
-            <div class="metric-value">81.0</div>
+            <div class="metric-value">74.3</div>
             <div class="metric-label">Average Score</div>
         </div>
     </div>
@@ -751,29 +995,10 @@
             <tbody>
                 
                 <tr>
-                    <td class="llm-rank" id="rank-llm1">#1</td>
-                    <td><strong>llm1</strong></td>
-                    <td><span class="score good" id="score-llm1">83.9</span></td>
-                    <td>39.5</td><td>75.0</td><td>70.0</td><td>74.0</td><td>93.0</td><td>99.5</td><td>100.0</td>
-                    <td>
-                        <button class="details-toggle" onclick="toggleDetails('details-llm1')">
-                            View Details
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="11">
-                        <div id="details-llm1" class="details-content">
-                            <div class="analysis-section"><h4>📁 File Structure</h4><div class="file-structure"><ul><li><strong>Find-SafeToDeleteFiles.ps1</strong>: 127 lines, 5,138 bytes</li></ul></div></div><div class="analysis-grid"><div class="analysis-section"><h4>🔧 Adaptability Analysis</h4><div class="score-display">39.5/100</div></div><div class="analysis-section"><h4>🏗️ Code Quality Analysis</h4><div class="score-display">75.0/100</div><ul class="key-points"><li class="positive">+ Implements try-catch error handling</li><li class="positive">+ Uses Parameter attributes</li><li class="positive">+ Has mandatory parameters</li><li class="positive">+ Supports pipeline input</li><li class="positive">+ Uses type hints (3 found)</li></ul></div><div class="analysis-section"><h4>📚 Documentation Analysis</h4><div class="score-display">70.0/100</div><ul class="key-points"><li class="negative">- No README documentation found</li><li class="positive">+ Adequate inline commenting (>5% average)</li><li class="positive">+ Good use of section comments</li><li class="positive">+ All PowerShell files have help documentation</li><li class="positive">+ 1 files have comprehensive help (4+ sections)</li></ul></div><div class="analysis-section"><h4>⚡ Performance Analysis</h4><div class="score-display">74.0/100</div><ul class="key-points"><li class="positive">+ Uses ErrorAction SilentlyContinue (prevents performance hits from errors)</li><li class="positive">+ Uses -File parameter for efficient enumeration</li><li class="positive">+ Supports recursive scanning</li><li class="positive">+ Implements result limiting for memory efficiency</li><li class="positive">+ Uses efficient .NET Generic Collections</li></ul></div><div class="analysis-section"><h4>📖 Readability Analysis</h4><div class="score-display">93.0/100</div><ul class="key-points"><li class="info">Adequate commenting (>5% comment ratio)</li><li class="info">Includes PowerShell help documentation</li><li class="positive">Comprehensive help documentation</li><li class="info">Uses descriptive variable names</li><li class="positive">Good logical sectioning with comments</li></ul></div><div class="analysis-section"><h4>📋 Requirements Traceability Analysis</h4><div class="score-display">99.5/100</div></div><div class="analysis-section"><h4>🔒 Security Analysis</h4><div class="score-display">100.0/100</div></div></div>
-                        </div>
-                    </td>
-                </tr>
-            
-                <tr>
-                    <td class="llm-rank" id="rank-llm4">#2</td>
+                    <td class="llm-rank" id="rank-llm4">#1</td>
                     <td><strong>llm4</strong></td>
-                    <td><span class="score good" id="score-llm4">82.9</span></td>
-                    <td>13.5</td><td>95.0</td><td>100.0</td><td>62.0</td><td>100.0</td><td>99.5</td><td>100.0</td>
+                    <td><span class="score average" id="score-llm4">76.1</span></td>
+                    <td>13.5</td><td>80.0</td><td>85.0</td><td>69.0</td><td>53.0</td><td>99.5</td><td>100.0</td>
                     <td>
                         <button class="details-toggle" onclick="toggleDetails('details-llm4')">
                             View Details
@@ -783,16 +1008,16 @@
                 <tr>
                     <td colspan="11">
                         <div id="details-llm4" class="details-content">
-                            <div class="analysis-section"><h4>📁 File Structure</h4><div class="file-structure"><ul><li><strong>create-test-files.bat</strong>: 51 lines, 1,561 bytes</li><li><strong>README.md</strong>: 192 lines, 7,077 bytes</li><li><strong>run-analyzer.bat</strong>: 51 lines, 1,577 bytes</li><li><strong>Safe-Delete-Analyzer.ps1</strong>: 361 lines, 11,832 bytes</li></ul></div></div><div class="analysis-grid"><div class="analysis-section"><h4>🔧 Adaptability Analysis</h4><div class="score-display">13.5/100</div></div><div class="analysis-section"><h4>🏗️ Code Quality Analysis</h4><div class="score-display">95.0/100</div><ul class="key-points"><li class="positive">+ Implements try-catch error handling</li><li class="positive">+ Uses Parameter attributes</li><li class="positive">+ Supports pipeline input</li><li class="positive">+ Uses type hints (6 found)</li><li class="positive">+ Well-organized with 2 functions</li></ul></div><div class="analysis-section"><h4>📚 Documentation Analysis</h4><div class="score-display">100.0/100</div><ul class="key-points"><li class="positive">+ Includes README documentation</li><li class="positive">+ README contains: usage, examples, features, installation, parameters</li><li class="positive">+ README includes code examples</li><li class="positive">+ Comprehensive README documentation</li><li class="positive">+ Adequate inline commenting (>5% average)</li></ul></div><div class="analysis-section"><h4>⚡ Performance Analysis</h4><div class="score-display">62.0/100</div><ul class="key-points"><li class="positive">+ Uses ErrorAction SilentlyContinue (prevents performance hits from errors)</li><li class="positive">+ Uses -File parameter for efficient enumeration</li><li class="positive">+ Implements result limiting for memory efficiency</li><li class="positive">+ Shows evidence of caching/pre-computation</li><li class="negative">- String operations in loops may impact performance</li></ul></div><div class="analysis-section"><h4>📖 Readability Analysis</h4><div class="score-display">100.0/100</div><ul class="key-points"><li class="info">Adequate commenting (>5% comment ratio)</li><li class="info">Includes PowerShell help documentation</li><li class="positive">Comprehensive help documentation</li><li class="info">Uses descriptive variable names</li><li class="info">Well-organized with 2 functions</li></ul></div><div class="analysis-section"><h4>📋 Requirements Traceability Analysis</h4><div class="score-display">99.5/100</div></div><div class="analysis-section"><h4>🔒 Security Analysis</h4><div class="score-display">100.0/100</div></div></div>
+                            <div class="analysis-section"><h4>📁 File Structure</h4><div class="file-structure"><ul><li><strong>create-test-files.bat</strong>: 51 lines, 1,561 bytes</li><li><strong>README.md</strong>: 192 lines, 7,077 bytes</li><li><strong>run-analyzer.bat</strong>: 51 lines, 1,577 bytes</li><li><strong>Safe-Delete-Analyzer.ps1</strong>: 361 lines, 11,832 bytes</li></ul></div></div><div class="analysis-grid"><div class="analysis-section"><h4>🔧 Adaptability Analysis</h4><div class="score-display">13.5/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Adaptability Analysis')">📊 How is this scored?</button><div class="deductions-section"><h5>📉 Missing Adaptability Features</h5><ul class="key-points"><li class="negative">- Limited or no configurable parameters</li><li class="negative">- No support for configuration files or environment variables</li><li class="negative">- No cross-platform compatibility considerations</li><li class="negative">- Platform-specific code that won't work on all systems</li><li class="negative">- No modular design or extension points</li><li class="negative">- Monolithic structure difficult to extend</li><li class="negative">- No environment detection or adaptation logic</li><li class="negative">- Missing permission/elevation handling</li></ul></div><div class="deductions-section"><h5>📉 Score Deductions & Missing Items</h5><ul class="key-points"><li class="negative">- Hardcoded paths detected (reduces portability)</li></ul></div></div><div class="analysis-section"><h4>🏗️ Code Quality Analysis</h4><div class="score-display">80.0/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Code Quality Analysis')">📊 How is this scored?</button><div class="deductions-section"><h5>📉 Code Quality Issues & Missing Elements</h5><ul class="key-points"><li class="negative">- No error handling (missing try-catch blocks or ErrorAction)</li><li class="negative">- No error tracking with ErrorVariable</li><li class="negative">- No Parameter attributes for proper parameter handling</li><li class="negative">- No mandatory parameters defined</li><li class="negative">- No pipeline input support (ValueFromPipeline)</li><li class="negative">- No type hints for parameters ([string], [int], etc.)</li><li class="negative">- No functions defined (monolithic code structure)</li><li class="negative">- Inconsistent or poor code indentation</li></ul></div><div class="no-deductions">✅ No significant deductions found</div></div><div class="analysis-section"><h4>📚 Documentation Analysis</h4><div class="score-display">85.0/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Documentation Analysis')">📊 How is this scored?</button><div class="deductions-section"><h5>📉 Documentation Issues & Missing Elements</h5><ul class="key-points"><li class="negative">- Very low inline commenting (< 5% of code)</li><li class="negative">- No file header comments explaining purpose</li><li class="negative">- Insufficient section comments to organize code</li><li class="negative">- No PowerShell help documentation (missing <# .SYNOPSIS #> blocks)</li></ul></div><div class="no-deductions">✅ No significant deductions found</div></div><div class="analysis-section"><h4>⚡ Performance Analysis</h4><div class="score-display">69.0/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Performance Analysis')">📊 How is this scored?</button><div class="deductions-section"><h5>📉 Score Deductions & Missing Items</h5><ul class="key-points"><li class="negative">- String operations in loops may impact performance</li><li class="negative">- Contains nested loops (1) - potential O(n²) complexity</li></ul></div></div><div class="analysis-section"><h4>📖 Readability Analysis</h4><div class="score-display">53.0/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Readability Analysis')">📊 How is this scored?</button><div class="deductions-section"><h5>📉 Readability Issues & Missing Elements</h5><ul class="key-points"><li class="negative">- Very few or no explanatory comments (< 5% of code)</li><li class="negative">- No PowerShell help documentation block</li><li class="negative">- No functions defined (monolithic code structure)</li><li class="negative">- No logical code sections with explanatory headers</li><li class="negative">- Poor or no code indentation structure</li></ul></div><div class="no-deductions">✅ No significant deductions found</div></div><div class="analysis-section"><h4>📋 Requirements Traceability Analysis</h4><div class="score-display">99.5/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Requirements Traceability Analysis')">📊 How is this scored?</button><div class="no-deductions">✅ No significant deductions found</div></div><div class="analysis-section"><h4>🔒 Security Analysis</h4><div class="score-display">100.0/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Security Analysis')">📊 How is this scored?</button><div class="no-deductions">✅ No significant deductions found</div></div></div>
                         </div>
                     </td>
                 </tr>
             
                 <tr>
-                    <td class="llm-rank" id="rank-llm3">#3</td>
+                    <td class="llm-rank" id="rank-llm3">#2</td>
                     <td><strong>llm3</strong></td>
-                    <td><span class="score good" id="score-llm3">81.5</span></td>
-                    <td>31.8</td><td>78.0</td><td>100.0</td><td>55.0</td><td>100.0</td><td>99.5</td><td>100.0</td>
+                    <td><span class="score average" id="score-llm3">75.9</span></td>
+                    <td>31.8</td><td>62.0</td><td>75.0</td><td>70.0</td><td>53.0</td><td>99.5</td><td>100.0</td>
                     <td>
                         <button class="details-toggle" onclick="toggleDetails('details-llm3')">
                             View Details
@@ -802,7 +1027,26 @@
                 <tr>
                     <td colspan="11">
                         <div id="details-llm3" class="details-content">
-                            <div class="analysis-section"><h4>📁 File Structure</h4><div class="file-structure"><ul><li><strong>README_FileDeletionSafetyReport.md</strong>: 68 lines, 3,144 bytes</li><li><strong>FileDeletionSafetyReport.ps1</strong>: 230 lines, 9,575 bytes</li></ul></div></div><div class="analysis-grid"><div class="analysis-section"><h4>🔧 Adaptability Analysis</h4><div class="score-display">31.8/100</div></div><div class="analysis-section"><h4>🏗️ Code Quality Analysis</h4><div class="score-display">78.0/100</div><ul class="key-points"><li class="positive">+ Uses ErrorAction for error handling</li><li class="positive">+ Uses Parameter attributes</li><li class="positive">+ Uses type hints (16 found)</li><li class="positive">+ Well-organized with 1 functions</li><li class="positive">+ Consistent code indentation</li></ul></div><div class="analysis-section"><h4>📚 Documentation Analysis</h4><div class="score-display">100.0/100</div><ul class="key-points"><li class="positive">+ Includes README documentation</li><li class="positive">+ README contains: usage, examples, features, parameters</li><li class="positive">+ README includes code examples</li><li class="positive">+ Comprehensive README documentation</li><li class="positive">+ Adequate inline commenting (>5% average)</li></ul></div><div class="analysis-section"><h4>⚡ Performance Analysis</h4><div class="score-display">55.0/100</div><ul class="key-points"><li class="positive">+ Uses ErrorAction SilentlyContinue (prevents performance hits from errors)</li><li class="positive">+ Implements result limiting for memory efficiency</li><li class="positive">+ Shows evidence of caching/pre-computation</li><li class="negative">- Multiple Where-Object filters (2) after enumeration</li><li class="negative">- String operations in loops may impact performance</li></ul></div><div class="analysis-section"><h4>📖 Readability Analysis</h4><div class="score-display">100.0/100</div><ul class="key-points"><li class="info">Adequate commenting (>5% comment ratio)</li><li class="info">Includes PowerShell help documentation</li><li class="positive">Comprehensive help documentation</li><li class="info">Uses descriptive variable names</li><li class="info">Well-organized with 1 functions</li></ul></div><div class="analysis-section"><h4>📋 Requirements Traceability Analysis</h4><div class="score-display">99.5/100</div></div><div class="analysis-section"><h4>🔒 Security Analysis</h4><div class="score-display">100.0/100</div></div></div>
+                            <div class="analysis-section"><h4>📁 File Structure</h4><div class="file-structure"><ul><li><strong>README_FileDeletionSafetyReport.md</strong>: 68 lines, 3,144 bytes</li><li><strong>FileDeletionSafetyReport.ps1</strong>: 230 lines, 9,575 bytes</li></ul></div></div><div class="analysis-grid"><div class="analysis-section"><h4>🔧 Adaptability Analysis</h4><div class="score-display">31.8/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Adaptability Analysis')">📊 How is this scored?</button><div class="deductions-section"><h5>📉 Missing Adaptability Features</h5><ul class="key-points"><li class="negative">- Limited cross-platform support</li><li class="negative">- Limited extensibility and modularity</li><li class="negative">- No environment detection or adaptation logic</li><li class="negative">- Missing permission/elevation handling</li><li class="negative">- Basic I/O flexibility, missing advanced format support</li><li class="negative">- Basic error handling, missing robust recovery patterns</li></ul></div><div class="no-deductions">✅ No significant deductions found</div></div><div class="analysis-section"><h4>🏗️ Code Quality Analysis</h4><div class="score-display">62.0/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Code Quality Analysis')">📊 How is this scored?</button><div class="deductions-section"><h5>📉 Code Quality Issues & Missing Elements</h5><ul class="key-points"><li class="negative">- No error handling (missing try-catch blocks or ErrorAction)</li><li class="negative">- No error tracking with ErrorVariable</li><li class="negative">- No Parameter attributes for proper parameter handling</li><li class="negative">- No mandatory parameters defined</li><li class="negative">- No pipeline input support (ValueFromPipeline)</li><li class="negative">- No type hints for parameters ([string], [int], etc.)</li><li class="negative">- No functions defined (monolithic code structure)</li><li class="negative">- Inconsistent or poor code indentation</li></ul></div><div class="no-deductions">✅ No significant deductions found</div></div><div class="analysis-section"><h4>📚 Documentation Analysis</h4><div class="score-display">75.0/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Documentation Analysis')">📊 How is this scored?</button><div class="deductions-section"><h5>📉 Documentation Issues & Missing Elements</h5><ul class="key-points"><li class="negative">- Very low inline commenting (< 5% of code)</li><li class="negative">- No file header comments explaining purpose</li><li class="negative">- Insufficient section comments to organize code</li><li class="negative">- No PowerShell help documentation (missing <# .SYNOPSIS #> blocks)</li></ul></div><div class="no-deductions">✅ No significant deductions found</div></div><div class="analysis-section"><h4>⚡ Performance Analysis</h4><div class="score-display">70.0/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Performance Analysis')">📊 How is this scored?</button><div class="deductions-section"><h5>📉 Score Deductions & Missing Items</h5><ul class="key-points"><li class="negative">- Multiple Where-Object filters (2) after enumeration</li><li class="negative">- String operations in loops may impact performance</li><li class="negative">- Contains nested loops (1) - potential O(n²) complexity</li></ul></div></div><div class="analysis-section"><h4>📖 Readability Analysis</h4><div class="score-display">53.0/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Readability Analysis')">📊 How is this scored?</button><div class="deductions-section"><h5>📉 Readability Issues & Missing Elements</h5><ul class="key-points"><li class="negative">- Very few or no explanatory comments (< 5% of code)</li><li class="negative">- No PowerShell help documentation block</li><li class="negative">- No functions defined (monolithic code structure)</li><li class="negative">- No logical code sections with explanatory headers</li><li class="negative">- Poor or no code indentation structure</li></ul></div><div class="no-deductions">✅ No significant deductions found</div></div><div class="analysis-section"><h4>📋 Requirements Traceability Analysis</h4><div class="score-display">99.5/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Requirements Traceability Analysis')">📊 How is this scored?</button><div class="no-deductions">✅ No significant deductions found</div></div><div class="analysis-section"><h4>🔒 Security Analysis</h4><div class="score-display">100.0/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Security Analysis')">📊 How is this scored?</button><div class="no-deductions">✅ No significant deductions found</div></div></div>
+                        </div>
+                    </td>
+                </tr>
+            
+                <tr>
+                    <td class="llm-rank" id="rank-llm1">#3</td>
+                    <td><strong>llm1</strong></td>
+                    <td><span class="score average" id="score-llm1">74.7</span></td>
+                    <td>39.5</td><td>66.0</td><td>35.0</td><td>74.0</td><td>43.0</td><td>99.5</td><td>100.0</td>
+                    <td>
+                        <button class="details-toggle" onclick="toggleDetails('details-llm1')">
+                            View Details
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="11">
+                        <div id="details-llm1" class="details-content">
+                            <div class="analysis-section"><h4>📁 File Structure</h4><div class="file-structure"><ul><li><strong>Find-SafeToDeleteFiles.ps1</strong>: 127 lines, 5,138 bytes</li></ul></div></div><div class="analysis-grid"><div class="analysis-section"><h4>🔧 Adaptability Analysis</h4><div class="score-display">39.5/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Adaptability Analysis')">📊 How is this scored?</button><div class="deductions-section"><h5>📉 Missing Adaptability Features</h5><ul class="key-points"><li class="negative">- Limited cross-platform support</li><li class="negative">- No modular design or extension points</li><li class="negative">- Monolithic structure difficult to extend</li><li class="negative">- No environment detection or adaptation logic</li><li class="negative">- Missing permission/elevation handling</li><li class="negative">- Basic error handling, missing robust recovery patterns</li><li class="negative">- Hardcoded paths detected (reduces portability)</li></ul></div><div class="deductions-section"><h5>📉 Score Deductions & Missing Items</h5><ul class="key-points"><li class="negative">- Hardcoded paths detected (reduces portability)</li></ul></div></div><div class="analysis-section"><h4>🏗️ Code Quality Analysis</h4><div class="score-display">66.0/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Code Quality Analysis')">📊 How is this scored?</button><div class="deductions-section"><h5>📉 Code Quality Issues & Missing Elements</h5><ul class="key-points"><li class="negative">- No error handling (missing try-catch blocks or ErrorAction)</li><li class="negative">- No error tracking with ErrorVariable</li><li class="negative">- No Parameter attributes for proper parameter handling</li><li class="negative">- No mandatory parameters defined</li><li class="negative">- No pipeline input support (ValueFromPipeline)</li><li class="negative">- No type hints for parameters ([string], [int], etc.)</li><li class="negative">- No functions defined (monolithic code structure)</li><li class="negative">- Inconsistent or poor code indentation</li></ul></div><div class="deductions-section"><h5>📉 Score Deductions & Missing Items</h5><ul class="key-points"><li class="negative">- No parameter block found</li></ul></div></div><div class="analysis-section"><h4>📚 Documentation Analysis</h4><div class="score-display">35.0/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Documentation Analysis')">📊 How is this scored?</button><div class="deductions-section"><h5>📉 Documentation Issues & Missing Elements</h5><ul class="key-points"><li class="negative">- Very low inline commenting (< 5% of code)</li><li class="negative">- No file header comments explaining purpose</li><li class="negative">- Insufficient section comments to organize code</li><li class="negative">- No PowerShell help documentation (missing <# .SYNOPSIS #> blocks)</li><li class="negative">- No README documentation file</li><li class="negative">- Documentation needs significant improvement</li></ul></div><div class="deductions-section"><h5>📉 Score Deductions & Missing Items</h5><ul class="key-points"><li class="negative">- No README documentation found</li></ul></div></div><div class="analysis-section"><h4>⚡ Performance Analysis</h4><div class="score-display">74.0/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Performance Analysis')">📊 How is this scored?</button><div class="deductions-section"><h5>📉 Score Deductions & Missing Items</h5><ul class="key-points"><li class="negative">- String operations in loops may impact performance</li><li class="negative">- Contains nested loops (1) - potential O(n²) complexity</li></ul></div></div><div class="analysis-section"><h4>📖 Readability Analysis</h4><div class="score-display">43.0/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Readability Analysis')">📊 How is this scored?</button><div class="deductions-section"><h5>📉 Readability Issues & Missing Elements</h5><ul class="key-points"><li class="negative">- Very few or no explanatory comments (< 5% of code)</li><li class="negative">- No PowerShell help documentation block</li><li class="negative">- No functions defined (monolithic code structure)</li><li class="negative">- No logical code sections with explanatory headers</li><li class="negative">- Poor or no code indentation structure</li><li class="negative">- Code readability could be significantly improved</li></ul></div><div class="no-deductions">✅ No significant deductions found</div></div><div class="analysis-section"><h4>📋 Requirements Traceability Analysis</h4><div class="score-display">99.5/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Requirements Traceability Analysis')">📊 How is this scored?</button><div class="no-deductions">✅ No significant deductions found</div></div><div class="analysis-section"><h4>🔒 Security Analysis</h4><div class="score-display">100.0/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Security Analysis')">📊 How is this scored?</button><div class="no-deductions">✅ No significant deductions found</div></div></div>
                         </div>
                     </td>
                 </tr>
@@ -810,8 +1054,8 @@
                 <tr>
                     <td class="llm-rank" id="rank-llm2">#4</td>
                     <td><strong>llm2</strong></td>
-                    <td><span class="score average" id="score-llm2">75.8</span></td>
-                    <td>27.5</td><td>64.0</td><td>60.0</td><td>55.0</td><td>93.0</td><td>98.9</td><td>94.0</td>
+                    <td><span class="score average" id="score-llm2">70.6</span></td>
+                    <td>27.5</td><td>47.0</td><td>30.0</td><td>75.0</td><td>43.0</td><td>98.9</td><td>94.0</td>
                     <td>
                         <button class="details-toggle" onclick="toggleDetails('details-llm2')">
                             View Details
@@ -821,7 +1065,7 @@
                 <tr>
                     <td colspan="11">
                         <div id="details-llm2" class="details-content">
-                            <div class="analysis-section"><h4>📁 File Structure</h4><div class="file-structure"><ul><li><strong>SafeDeleteReport.ps1</strong>: 60 lines, 2,613 bytes</li></ul></div></div><div class="analysis-grid"><div class="analysis-section"><h4>🔧 Adaptability Analysis</h4><div class="score-display">27.5/100</div></div><div class="analysis-section"><h4>🏗️ Code Quality Analysis</h4><div class="score-display">64.0/100</div><ul class="key-points"><li class="positive">+ Uses ErrorAction for error handling</li><li class="positive">+ Uses type hints (2 found)</li><li class="positive">+ Well-organized with 1 functions</li><li class="positive">+ Consistent code indentation</li><li class="positive">+ Uses approved PowerShell verbs</li></ul></div><div class="analysis-section"><h4>📚 Documentation Analysis</h4><div class="score-display">60.0/100</div><ul class="key-points"><li class="negative">- No README documentation found</li><li class="positive">+ Excellent inline commenting (>15% average)</li><li class="positive">+ All files have header comments</li><li class="positive">+ Good use of section comments</li><li class="negative">- No PowerShell help documentation found</li></ul></div><div class="analysis-section"><h4>⚡ Performance Analysis</h4><div class="score-display">55.0/100</div><ul class="key-points"><li class="positive">+ Uses ErrorAction SilentlyContinue (prevents performance hits from errors)</li><li class="positive">+ Uses -File parameter for efficient enumeration</li><li class="positive">+ Supports recursive scanning</li><li class="negative">- String operations in loops may impact performance</li></ul></div><div class="analysis-section"><h4>📖 Readability Analysis</h4><div class="score-display">93.0/100</div><ul class="key-points"><li class="positive">Excellent commenting (>15% comment ratio)</li><li class="info">Uses descriptive variable names</li><li class="info">Well-organized with 1 functions</li><li class="positive">Good logical sectioning with comments</li><li class="positive">Good code indentation</li></ul></div><div class="analysis-section"><h4>📋 Requirements Traceability Analysis</h4><div class="score-display">98.9/100</div></div><div class="analysis-section"><h4>🔒 Security Analysis</h4><div class="score-display">94.0/100</div></div></div>
+                            <div class="analysis-section"><h4>📁 File Structure</h4><div class="file-structure"><ul><li><strong>SafeDeleteReport.ps1</strong>: 60 lines, 2,613 bytes</li></ul></div></div><div class="analysis-grid"><div class="analysis-section"><h4>🔧 Adaptability Analysis</h4><div class="score-display">27.5/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Adaptability Analysis')">📊 How is this scored?</button><div class="deductions-section"><h5>📉 Missing Adaptability Features</h5><ul class="key-points"><li class="negative">- Basic configuration only, missing advanced parameter options</li><li class="negative">- No cross-platform compatibility considerations</li><li class="negative">- Platform-specific code that won't work on all systems</li><li class="negative">- Limited extensibility and modularity</li><li class="negative">- No environment detection or adaptation logic</li><li class="negative">- Missing permission/elevation handling</li><li class="negative">- Basic I/O flexibility, missing advanced format support</li><li class="negative">- Basic error handling, missing robust recovery patterns</li></ul></div><div class="deductions-section"><h5>📉 Score Deductions & Missing Items</h5><ul class="key-points"><li class="negative">- Hardcoded paths detected (reduces portability)</li></ul></div></div><div class="analysis-section"><h4>🏗️ Code Quality Analysis</h4><div class="score-display">47.0/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Code Quality Analysis')">📊 How is this scored?</button><div class="deductions-section"><h5>📉 Code Quality Issues & Missing Elements</h5><ul class="key-points"><li class="negative">- No error handling (missing try-catch blocks or ErrorAction)</li><li class="negative">- No error tracking with ErrorVariable</li><li class="negative">- No Parameter attributes for proper parameter handling</li><li class="negative">- No mandatory parameters defined</li><li class="negative">- No pipeline input support (ValueFromPipeline)</li><li class="negative">- No type hints for parameters ([string], [int], etc.)</li><li class="negative">- No functions defined (monolithic code structure)</li><li class="negative">- Inconsistent or poor code indentation</li></ul></div><div class="no-deductions">✅ No significant deductions found</div></div><div class="analysis-section"><h4>📚 Documentation Analysis</h4><div class="score-display">30.0/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Documentation Analysis')">📊 How is this scored?</button><div class="deductions-section"><h5>📉 Documentation Issues & Missing Elements</h5><ul class="key-points"><li class="negative">- Very low inline commenting (< 5% of code)</li><li class="negative">- No file header comments explaining purpose</li><li class="negative">- Insufficient section comments to organize code</li><li class="negative">- No PowerShell help documentation (missing <# .SYNOPSIS #> blocks)</li><li class="negative">- No README documentation file</li><li class="negative">- No PowerShell help documentation found</li><li class="negative">- Documentation needs significant improvement</li></ul></div><div class="deductions-section"><h5>📉 Score Deductions & Missing Items</h5><ul class="key-points"><li class="negative">- No README documentation found</li><li class="negative">- No PowerShell help documentation found</li></ul></div></div><div class="analysis-section"><h4>⚡ Performance Analysis</h4><div class="score-display">75.0/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Performance Analysis')">📊 How is this scored?</button><div class="deductions-section"><h5>📉 Score Deductions & Missing Items</h5><ul class="key-points"><li class="negative">- String operations in loops may impact performance</li></ul></div></div><div class="analysis-section"><h4>📖 Readability Analysis</h4><div class="score-display">43.0/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Readability Analysis')">📊 How is this scored?</button><div class="deductions-section"><h5>📉 Readability Issues & Missing Elements</h5><ul class="key-points"><li class="negative">- Very few or no explanatory comments (< 5% of code)</li><li class="negative">- No PowerShell help documentation block</li><li class="negative">- No functions defined (monolithic code structure)</li><li class="negative">- No logical code sections with explanatory headers</li><li class="negative">- Poor or no code indentation structure</li><li class="negative">- Code readability could be significantly improved</li></ul></div><div class="no-deductions">✅ No significant deductions found</div></div><div class="analysis-section"><h4>📋 Requirements Traceability Analysis</h4><div class="score-display">98.9/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Requirements Traceability Analysis')">📊 How is this scored?</button><div class="no-deductions">✅ No significant deductions found</div></div><div class="analysis-section"><h4>🔒 Security Analysis</h4><div class="score-display">94.0/100</div><button class="scoring-guide-btn" onclick="showScoringGuide('Security Analysis')">📊 How is this scored?</button><div class="no-deductions">✅ No significant deductions found</div></div></div>
                         </div>
                     </td>
                 </tr>
@@ -843,7 +1087,7 @@
             "Security Analysis": 15
         };
         
-        let originalScores = [{"llm_name": "llm1", "overall_score": 83.575, "files": [{"path": "d:\\CodingModel\\ModelCompare\\FirstPassModelCompare\\llm1\\Find-SafeToDeleteFiles.ps1", "lines": 127, "size": 5138}], "analysis_scores": {"Performance Analysis": {"score": 74, "notes": ["+ Uses ErrorAction SilentlyContinue (prevents performance hits from errors)", "+ Uses -File parameter for efficient enumeration", "+ Supports recursive scanning", "+ Implements result limiting for memory efficiency", "+ Uses efficient .NET Generic Collections", "- String operations in loops may impact performance", "+ Good balance of features and performance", "- Contains nested loops (1) - potential O(n\u00b2) complexity"]}, "Readability Analysis": {"score": 93, "notes": ["Adequate commenting (>5% comment ratio)", "Includes PowerShell help documentation", "Comprehensive help documentation", "Uses descriptive variable names", "Good logical sectioning with comments", "Good code indentation"]}, "Code Quality Analysis": {"score": 75, "notes": ["+ Implements try-catch error handling", "+ Uses Parameter attributes", "+ Has mandatory parameters", "+ Supports pipeline input", "+ Uses type hints (3 found)", "+ Consistent code indentation", "+ Uses CmdletBinding for advanced functions", "+ Reasonable line lengths (<10% over 120 chars)", "+ Good variable naming practices"]}, "Documentation Analysis": {"score": 70, "notes": ["- No README documentation found", "+ Adequate inline commenting (>5% average)", "+ Good use of section comments", "+ All PowerShell files have help documentation", "+ 1 files have comprehensive help (4+ sections)"]}, "Requirements Traceability Analysis": {"score": 99.5, "notes": {"requirements_total": 10, "requirements_implemented": 10, "mandatory_requirements": 10, "mandatory_implemented": 10, "traceability_matrix": {"requirements": {"REQ-001": {"text": "Script must run on Windows platform", "type": "platform", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 3, "status": "\u2713 PASS"}, "REQ-002": {"text": "Must identify files that are safe to delete", "type": "functionality", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 5, "status": "\u2713 PASS"}, "REQ-003": {"text": "Must NOT actually delete files (identification only)", "type": "safety", "mandatory": true, "implemented": true, "quality_score": 95, "evidence_count": 2, "status": "\u2713 PASS"}, "REQ-004": {"text": "Must provide ranking/scoring of safety level", "type": "functionality", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 5, "status": "\u2713 PASS"}, "REQ-005": {"text": "Report must include safety-score field", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 3, "status": "\u2713 PASS"}, "REQ-006": {"text": "Report must include parameters that went into score consideration", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-007": {"text": "Report must include file name", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 3, "status": "\u2713 PASS"}, "REQ-008": {"text": "Report must include file size", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-009": {"text": "Report must include date created", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-010": {"text": "Report must include date updated/modified", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 3, "status": "\u2713 PASS"}}, "summary": {"total_requirements": 10, "implemented": 10, "not_implemented": 0, "mandatory_met": 10, "optional_met": 0}}, "requirement_traces": [{"id": "REQ-001", "text": "Script must run on Windows platform", "implemented": true, "quality": 100, "evidence_count": 3}, {"id": "REQ-002", "text": "Must identify files that are safe to delete", "implemented": true, "quality": 100, "evidence_count": 5}, {"id": "REQ-003", "text": "Must NOT actually delete files (identification only)", "implemented": true, "quality": 95, "evidence_count": 2}, {"id": "REQ-004", "text": "Must provide ranking/scoring of safety level", "implemented": true, "quality": 100, "evidence_count": 5}, {"id": "REQ-005", "text": "Report must include safety-score field", "implemented": true, "quality": 100, "evidence_count": 3}, {"id": "REQ-006", "text": "Report must include parameters that went into score consideration", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-007", "text": "Report must include file name", "implemented": true, "quality": 100, "evidence_count": 3}, {"id": "REQ-008", "text": "Report must include file size", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-009", "text": "Report must include date created", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-010", "text": "Report must include date updated/modified", "implemented": true, "quality": 100, "evidence_count": 3}]}}, "Security Analysis": {"score": 100, "notes": {"security_issues": {"MEDIUM_input_validation": ["param (\n    [Parameter(Mandatory = $false, ValueFromPipeline = $true, Position = 0)"], "MEDIUM_error_handling": ["-ErrorAction SilentlyContinue"]}, "good_practices": {"safe_file_operations": ["Resolve-Path"], "logging_auditing": ["Write-Error"]}, "files_analyzed": 1, "total_content_length": 5012, "security_score_breakdown": {"critical_issues": 0, "high_risk_issues": 0, "medium_risk_issues": 2, "good_practices_count": 2, "security_categories_analyzed": 11, "practice_categories_found": 2}}}, "Adaptability Analysis": {"score": 39.5, "notes": {"configuration_score": 90.0, "cross_platform_score": 20.0, "extensibility_score": 20.0, "environment_adaptation_score": 0.0, "input_output_flexibility_score": 60.0, "error_recovery_score": 30.0, "detailed_notes": ["+ 2 configurable parameters found", "+ 1 configurable parameters found", "+ 1 configurable parameters found", "+ 8 configurable parameters found", "+ Environment variable usage found", "+ Proper path handling methods used", "- Hardcoded paths detected (reduces portability)", "+ PowerShell Core compatibility considered", "+ Extension/plugin architecture found", "+ Alternative output format available", "+ PowerShell pipeline integration", "+ Customizable output formatting", "+ Basic error handling present", "+ Graceful degradation patterns detected"]}}}}, {"llm_name": "llm2", "overall_score": 75.925, "files": [{"path": "d:\\CodingModel\\ModelCompare\\FirstPassModelCompare\\llm2\\SafeDeleteReport.ps1", "lines": 60, "size": 2613}], "analysis_scores": {"Performance Analysis": {"score": 55, "notes": ["+ Uses ErrorAction SilentlyContinue (prevents performance hits from errors)", "+ Uses -File parameter for efficient enumeration", "+ Supports recursive scanning", "- String operations in loops may impact performance"]}, "Readability Analysis": {"score": 93, "notes": ["Excellent commenting (>15% comment ratio)", "Uses descriptive variable names", "Well-organized with 1 functions", "Good logical sectioning with comments", "Good code indentation"]}, "Code Quality Analysis": {"score": 64, "notes": ["+ Uses ErrorAction for error handling", "+ Uses type hints (2 found)", "+ Well-organized with 1 functions", "+ Consistent code indentation", "+ Uses approved PowerShell verbs", "+ Uses proper parameter block", "+ Reasonable line lengths (<10% over 120 chars)", "+ Good variable naming practices"]}, "Documentation Analysis": {"score": 60, "notes": ["- No README documentation found", "+ Excellent inline commenting (>15% average)", "+ All files have header comments", "+ Good use of section comments", "- No PowerShell help documentation found"]}, "Requirements Traceability Analysis": {"score": 98.9, "notes": {"requirements_total": 10, "requirements_implemented": 10, "mandatory_requirements": 10, "mandatory_implemented": 10, "traceability_matrix": {"requirements": {"REQ-001": {"text": "Script must run on Windows platform", "type": "platform", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 2, "status": "\u2713 PASS"}, "REQ-002": {"text": "Must identify files that are safe to delete", "type": "functionality", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-003": {"text": "Must NOT actually delete files (identification only)", "type": "safety", "mandatory": true, "implemented": true, "quality_score": 95, "evidence_count": 2, "status": "\u2713 PASS"}, "REQ-004": {"text": "Must provide ranking/scoring of safety level", "type": "functionality", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 5, "status": "\u2713 PASS"}, "REQ-005": {"text": "Report must include safety-score field", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 3, "status": "\u2713 PASS"}, "REQ-006": {"text": "Report must include parameters that went into score consideration", "type": "output", "mandatory": true, "implemented": true, "quality_score": 94, "evidence_count": 1, "status": "\u2713 PASS"}, "REQ-007": {"text": "Report must include file name", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-008": {"text": "Report must include file size", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-009": {"text": "Report must include date created", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-010": {"text": "Report must include date updated/modified", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}}, "summary": {"total_requirements": 10, "implemented": 10, "not_implemented": 0, "mandatory_met": 10, "optional_met": 0}}, "requirement_traces": [{"id": "REQ-001", "text": "Script must run on Windows platform", "implemented": true, "quality": 100, "evidence_count": 2}, {"id": "REQ-002", "text": "Must identify files that are safe to delete", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-003", "text": "Must NOT actually delete files (identification only)", "implemented": true, "quality": 95, "evidence_count": 2}, {"id": "REQ-004", "text": "Must provide ranking/scoring of safety level", "implemented": true, "quality": 100, "evidence_count": 5}, {"id": "REQ-005", "text": "Report must include safety-score field", "implemented": true, "quality": 100, "evidence_count": 3}, {"id": "REQ-006", "text": "Report must include parameters that went into score consideration", "implemented": true, "quality": 94, "evidence_count": 1}, {"id": "REQ-007", "text": "Report must include file name", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-008", "text": "Report must include file size", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-009", "text": "Report must include date created", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-010", "text": "Report must include date updated/modified", "implemented": true, "quality": 100, "evidence_count": 4}]}}, "Security Analysis": {"score": 94.0, "notes": {"security_issues": {"MEDIUM_input_validation": ["param(\n    [string]$Path = '.',\n    [string]$ReportFile = 'SafeDeleteReport.csv'\n)\n\n", "param(\n        [System.IO.FileInfo]$File\n    )\n    "], "MEDIUM_error_handling": ["-ErrorAction SilentlyContinue"]}, "good_practices": {}, "files_analyzed": 1, "total_content_length": 2554, "security_score_breakdown": {"critical_issues": 0, "high_risk_issues": 0, "medium_risk_issues": 3, "good_practices_count": 0, "security_categories_analyzed": 11, "practice_categories_found": 0}}}, "Adaptability Analysis": {"score": 27.5, "notes": {"configuration_score": 50.0, "cross_platform_score": 0.0, "extensibility_score": 40.0, "environment_adaptation_score": 0.0, "input_output_flexibility_score": 40.0, "error_recovery_score": 30.0, "detailed_notes": ["+ 2 configurable parameters found", "+ 12 configurable parameters found", "- Hardcoded paths detected (reduces portability)", "+ PowerShell Core compatibility considered", "+ Some modularity with 1 function(s)", "+ Extension/plugin architecture found", "+ Alternative output format available", "+ PowerShell pipeline integration", "+ Basic error handling present", "+ Graceful degradation patterns detected"]}}}}, {"llm_name": "llm3", "overall_score": 81.855, "files": [{"path": "d:\\CodingModel\\ModelCompare\\FirstPassModelCompare\\llm3\\README_FileDeletionSafetyReport.md", "lines": 68, "size": 3144}, {"path": "d:\\CodingModel\\ModelCompare\\FirstPassModelCompare\\llm3\\scripts\\FileDeletionSafetyReport.ps1", "lines": 230, "size": 9575}], "analysis_scores": {"Performance Analysis": {"score": 55, "notes": ["+ Uses ErrorAction SilentlyContinue (prevents performance hits from errors)", "+ Implements result limiting for memory efficiency", "+ Shows evidence of caching/pre-computation", "- Multiple Where-Object filters (2) after enumeration", "- String operations in loops may impact performance", "+ Good balance of features and performance", "- Contains nested loops (1) - potential O(n\u00b2) complexity"]}, "Readability Analysis": {"score": 100, "notes": ["Adequate commenting (>5% comment ratio)", "Includes PowerShell help documentation", "Comprehensive help documentation", "Uses descriptive variable names", "Well-organized with 1 functions", "Good logical sectioning with comments", "Good code indentation"]}, "Code Quality Analysis": {"score": 78, "notes": ["+ Uses ErrorAction for error handling", "+ Uses Parameter attributes", "+ Uses type hints (16 found)", "+ Well-organized with 1 functions", "+ Consistent code indentation", "+ Uses CmdletBinding for advanced functions", "+ Uses proper parameter block", "+ Reasonable line lengths (<10% over 120 chars)", "+ Good variable naming practices"]}, "Documentation Analysis": {"score": 100, "notes": ["+ Includes README documentation", "+ README contains: usage, examples, features, parameters", "+ README includes code examples", "+ Comprehensive README documentation", "+ Adequate inline commenting (>5% average)", "+ Good use of section comments", "+ All PowerShell files have help documentation", "+ 1 files have comprehensive help (4+ sections)"]}, "Requirements Traceability Analysis": {"score": 99.5, "notes": {"requirements_total": 10, "requirements_implemented": 10, "mandatory_requirements": 10, "mandatory_implemented": 10, "traceability_matrix": {"requirements": {"REQ-001": {"text": "Script must run on Windows platform", "type": "platform", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-002": {"text": "Must identify files that are safe to delete", "type": "functionality", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-003": {"text": "Must NOT actually delete files (identification only)", "type": "safety", "mandatory": true, "implemented": true, "quality_score": 95, "evidence_count": 2, "status": "\u2713 PASS"}, "REQ-004": {"text": "Must provide ranking/scoring of safety level", "type": "functionality", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 5, "status": "\u2713 PASS"}, "REQ-005": {"text": "Report must include safety-score field", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 3, "status": "\u2713 PASS"}, "REQ-006": {"text": "Report must include parameters that went into score consideration", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 3, "status": "\u2713 PASS"}, "REQ-007": {"text": "Report must include file name", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 3, "status": "\u2713 PASS"}, "REQ-008": {"text": "Report must include file size", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-009": {"text": "Report must include date created", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-010": {"text": "Report must include date updated/modified", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}}, "summary": {"total_requirements": 10, "implemented": 10, "not_implemented": 0, "mandatory_met": 10, "optional_met": 0}}, "requirement_traces": [{"id": "REQ-001", "text": "Script must run on Windows platform", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-002", "text": "Must identify files that are safe to delete", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-003", "text": "Must NOT actually delete files (identification only)", "implemented": true, "quality": 95, "evidence_count": 2}, {"id": "REQ-004", "text": "Must provide ranking/scoring of safety level", "implemented": true, "quality": 100, "evidence_count": 5}, {"id": "REQ-005", "text": "Report must include safety-score field", "implemented": true, "quality": 100, "evidence_count": 3}, {"id": "REQ-006", "text": "Report must include parameters that went into score consideration", "implemented": true, "quality": 100, "evidence_count": 3}, {"id": "REQ-007", "text": "Report must include file name", "implemented": true, "quality": 100, "evidence_count": 3}, {"id": "REQ-008", "text": "Report must include file size", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-009", "text": "Report must include date created", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-010", "text": "Report must include date updated/modified", "implemented": true, "quality": 100, "evidence_count": 4}]}}, "Security Analysis": {"score": 100, "notes": {"security_issues": {"MEDIUM_input_validation": ["Param(\n    [Parameter(Position=0)", "param([long]$Bytes)\n    "], "MEDIUM_error_handling": ["-ErrorAction SilentlyContinue"]}, "good_practices": {"safe_file_operations": ["Test-Path", "-LiteralPath", "Resolve-Path"], "logging_auditing": ["Write-Warning"]}, "files_analyzed": 1, "total_content_length": 9346, "security_score_breakdown": {"critical_issues": 0, "high_risk_issues": 0, "medium_risk_issues": 3, "good_practices_count": 4, "security_categories_analyzed": 11, "practice_categories_found": 2}}}, "Adaptability Analysis": {"score": 31.8, "notes": {"configuration_score": 65.0, "cross_platform_score": 20.0, "extensibility_score": 30.0, "environment_adaptation_score": 0.0, "input_output_flexibility_score": 35.0, "error_recovery_score": 20.0, "detailed_notes": ["+ 1 configurable parameters found", "+ 1 configurable parameters found", "+ 2 configurable parameters found", "+ 47 configurable parameters found", "+ Configuration file support detected", "+ Environment variable usage found", "+ Switch parameters for boolean options", "+ Proper path handling methods used", "+ PowerShell Core compatibility considered", "+ Some modularity with 1 function(s)", "+ Extension/plugin architecture found", "+ Data-driven processing patterns detected", "+ Multiple output formats supported (2 types)", "+ PowerShell pipeline integration", "+ Customizable output formatting"]}}}}, {"llm_name": "llm4", "overall_score": 83.125, "files": [{"path": "d:\\CodingModel\\ModelCompare\\FirstPassModelCompare\\llm4\\create-test-files.bat", "lines": 51, "size": 1561}, {"path": "d:\\CodingModel\\ModelCompare\\FirstPassModelCompare\\llm4\\README.md", "lines": 192, "size": 7077}, {"path": "d:\\CodingModel\\ModelCompare\\FirstPassModelCompare\\llm4\\run-analyzer.bat", "lines": 51, "size": 1577}, {"path": "d:\\CodingModel\\ModelCompare\\FirstPassModelCompare\\llm4\\Safe-Delete-Analyzer.ps1", "lines": 361, "size": 11832}], "analysis_scores": {"Performance Analysis": {"score": 62, "notes": ["+ Uses ErrorAction SilentlyContinue (prevents performance hits from errors)", "+ Uses -File parameter for efficient enumeration", "+ Implements result limiting for memory efficiency", "+ Shows evidence of caching/pre-computation", "- String operations in loops may impact performance", "- Contains nested loops (1) - potential O(n\u00b2) complexity"]}, "Readability Analysis": {"score": 100, "notes": ["Adequate commenting (>5% comment ratio)", "Includes PowerShell help documentation", "Comprehensive help documentation", "Uses descriptive variable names", "Well-organized with 2 functions", "Good logical sectioning with comments", "Good code indentation"]}, "Code Quality Analysis": {"score": 95, "notes": ["+ Implements try-catch error handling", "+ Uses Parameter attributes", "+ Supports pipeline input", "+ Uses type hints (6 found)", "+ Well-organized with 2 functions", "+ Consistent code indentation", "+ Uses approved PowerShell verbs", "+ Uses CmdletBinding for advanced functions", "+ Uses proper parameter block", "+ Reasonable line lengths (<10% over 120 chars)", "+ Good variable naming practices"]}, "Documentation Analysis": {"score": 100, "notes": ["+ Includes README documentation", "+ README contains: usage, examples, features, installation, parameters", "+ README includes code examples", "+ Comprehensive README documentation", "+ Adequate inline commenting (>5% average)", "+ All files have header comments", "+ Good use of section comments", "+ All PowerShell files have help documentation", "+ 1 files have comprehensive help (4+ sections)"]}, "Requirements Traceability Analysis": {"score": 99.5, "notes": {"requirements_total": 10, "requirements_implemented": 10, "mandatory_requirements": 10, "mandatory_implemented": 10, "traceability_matrix": {"requirements": {"REQ-001": {"text": "Script must run on Windows platform", "type": "platform", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-002": {"text": "Must identify files that are safe to delete", "type": "functionality", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 5, "status": "\u2713 PASS"}, "REQ-003": {"text": "Must NOT actually delete files (identification only)", "type": "safety", "mandatory": true, "implemented": true, "quality_score": 95, "evidence_count": 1, "status": "\u2713 PASS"}, "REQ-004": {"text": "Must provide ranking/scoring of safety level", "type": "functionality", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 5, "status": "\u2713 PASS"}, "REQ-005": {"text": "Report must include safety-score field", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 3, "status": "\u2713 PASS"}, "REQ-006": {"text": "Report must include parameters that went into score consideration", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 3, "status": "\u2713 PASS"}, "REQ-007": {"text": "Report must include file name", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-008": {"text": "Report must include file size", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-009": {"text": "Report must include date created", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-010": {"text": "Report must include date updated/modified", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 3, "status": "\u2713 PASS"}}, "summary": {"total_requirements": 10, "implemented": 10, "not_implemented": 0, "mandatory_met": 10, "optional_met": 0}}, "requirement_traces": [{"id": "REQ-001", "text": "Script must run on Windows platform", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-002", "text": "Must identify files that are safe to delete", "implemented": true, "quality": 100, "evidence_count": 5}, {"id": "REQ-003", "text": "Must NOT actually delete files (identification only)", "implemented": true, "quality": 95, "evidence_count": 1}, {"id": "REQ-004", "text": "Must provide ranking/scoring of safety level", "implemented": true, "quality": 100, "evidence_count": 5}, {"id": "REQ-005", "text": "Report must include safety-score field", "implemented": true, "quality": 100, "evidence_count": 3}, {"id": "REQ-006", "text": "Report must include parameters that went into score consideration", "implemented": true, "quality": 100, "evidence_count": 3}, {"id": "REQ-007", "text": "Report must include file name", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-008", "text": "Report must include file size", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-009", "text": "Report must include date created", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-010", "text": "Report must include date updated/modified", "implemented": true, "quality": 100, "evidence_count": 3}]}}, "Security Analysis": {"score": 100, "notes": {"security_issues": {"MEDIUM_input_validation": ["param(\n    [Parameter(ValueFromPipeline = $true)", "param(\n        [System.IO.FileInfo]$File\n    )\n    \n    ", "param(\n        [string]$DirectoryPath,\n        [int]$CurrentDepth = 0\n    )\n    \n    "], "MEDIUM_error_handling": ["-ErrorAction SilentlyContinue"]}, "good_practices": {"safe_file_operations": ["Test-Path", "Test-Path"], "logging_auditing": ["Write-Warning", "Write-Warning", "Write-Warning"]}, "files_analyzed": 1, "total_content_length": 11472, "security_score_breakdown": {"critical_issues": 0, "high_risk_issues": 0, "medium_risk_issues": 4, "good_practices_count": 5, "security_categories_analyzed": 11, "practice_categories_found": 2}}}, "Adaptability Analysis": {"score": 13.5, "notes": {"configuration_score": 25.0, "cross_platform_score": 5.0, "extensibility_score": 15.0, "environment_adaptation_score": 5.0, "input_output_flexibility_score": 15.0, "error_recovery_score": 10.0, "detailed_notes": ["+ 1 configurable parameters found", "+ 1 configurable parameters found", "+ 3 configurable parameters found", "+ 31 configurable parameters found", "+ Switch parameters for boolean options", "+ Proper path handling methods used", "- Hardcoded paths detected (reduces portability)", "+ PowerShell Core compatibility considered", "+ Some modularity with 2 function(s)", "+ Extension/plugin architecture found", "+ Data-driven processing patterns detected", "+ PowerShell version compatibility checks", "+ Alternative output format available", "+ PowerShell pipeline integration", "+ Customizable output formatting"]}}}}];
+        let originalScores = [{"llm_name": "llm1", "overall_score": 73.425, "files": [{"path": "d:\\CodingModel\\ModelCompare\\FirstPassModelCompare\\llm1\\Find-SafeToDeleteFiles.ps1", "lines": 127, "size": 5138}], "analysis_scores": {"Performance Analysis": {"score": 74, "notes": ["+ Uses ErrorAction SilentlyContinue (prevents performance hits from errors)", "+ Uses -File parameter for efficient enumeration", "+ Supports recursive scanning", "+ Implements result limiting for memory efficiency", "+ Uses efficient .NET Generic Collections", "- String operations in loops may impact performance", "+ Good balance of features and performance", "- Contains nested loops (1) - potential O(n\u00b2) complexity"]}, "Readability Analysis": {"score": 43, "notes": ["Adequate commenting (>5% comment ratio)", "Includes PowerShell help documentation", "Comprehensive help documentation", "Uses descriptive variable names", "Good logical sectioning with comments", "Good code indentation"]}, "Code Quality Analysis": {"score": 66, "notes": ["+ Implements try-catch error handling", "+ Uses Parameter attributes", "+ Has mandatory parameters", "+ Supports pipeline input", "+ Uses type hints (3 found)", "+ Consistent code indentation", "+ Uses CmdletBinding for advanced functions", "- No parameter block found", "+ Reasonable line lengths (<10% over 120 chars)", "+ Good variable naming practices"]}, "Documentation Analysis": {"score": 35, "notes": ["- No README documentation found", "+ Adequate inline commenting (>5% average)", "+ Good use of section comments", "+ All PowerShell files have help documentation", "+ 1 files have comprehensive help (4+ sections)"]}, "Requirements Traceability Analysis": {"score": 99.5, "notes": {"requirements_total": 10, "requirements_implemented": 10, "mandatory_requirements": 10, "mandatory_implemented": 10, "traceability_matrix": {"requirements": {"REQ-001": {"text": "Script must run on Windows platform", "type": "platform", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 3, "status": "\u2713 PASS"}, "REQ-002": {"text": "Must identify files that are safe to delete", "type": "functionality", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 5, "status": "\u2713 PASS"}, "REQ-003": {"text": "Must NOT actually delete files (identification only)", "type": "safety", "mandatory": true, "implemented": true, "quality_score": 95, "evidence_count": 2, "status": "\u2713 PASS"}, "REQ-004": {"text": "Must provide ranking/scoring of safety level", "type": "functionality", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 5, "status": "\u2713 PASS"}, "REQ-005": {"text": "Report must include safety-score field", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 3, "status": "\u2713 PASS"}, "REQ-006": {"text": "Report must include parameters that went into score consideration", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-007": {"text": "Report must include file name", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 3, "status": "\u2713 PASS"}, "REQ-008": {"text": "Report must include file size", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-009": {"text": "Report must include date created", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-010": {"text": "Report must include date updated/modified", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 3, "status": "\u2713 PASS"}}, "summary": {"total_requirements": 10, "implemented": 10, "not_implemented": 0, "mandatory_met": 10, "optional_met": 0}}, "requirement_traces": [{"id": "REQ-001", "text": "Script must run on Windows platform", "implemented": true, "quality": 100, "evidence_count": 3}, {"id": "REQ-002", "text": "Must identify files that are safe to delete", "implemented": true, "quality": 100, "evidence_count": 5}, {"id": "REQ-003", "text": "Must NOT actually delete files (identification only)", "implemented": true, "quality": 95, "evidence_count": 2}, {"id": "REQ-004", "text": "Must provide ranking/scoring of safety level", "implemented": true, "quality": 100, "evidence_count": 5}, {"id": "REQ-005", "text": "Report must include safety-score field", "implemented": true, "quality": 100, "evidence_count": 3}, {"id": "REQ-006", "text": "Report must include parameters that went into score consideration", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-007", "text": "Report must include file name", "implemented": true, "quality": 100, "evidence_count": 3}, {"id": "REQ-008", "text": "Report must include file size", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-009", "text": "Report must include date created", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-010", "text": "Report must include date updated/modified", "implemented": true, "quality": 100, "evidence_count": 3}]}}, "Security Analysis": {"score": 100, "notes": {"security_issues": {"MEDIUM_input_validation": ["param (\n    [Parameter(Mandatory = $false, ValueFromPipeline = $true, Position = 0)"], "MEDIUM_error_handling": ["-ErrorAction SilentlyContinue"]}, "good_practices": {"safe_file_operations": ["Resolve-Path"], "logging_auditing": ["Write-Error"]}, "files_analyzed": 1, "total_content_length": 5012, "security_score_breakdown": {"critical_issues": 0, "high_risk_issues": 0, "medium_risk_issues": 2, "good_practices_count": 2, "security_categories_analyzed": 11, "practice_categories_found": 2}}}, "Adaptability Analysis": {"score": 39.5, "notes": {"configuration_score": 90.0, "cross_platform_score": 20.0, "extensibility_score": 20.0, "environment_adaptation_score": 0.0, "input_output_flexibility_score": 60.0, "error_recovery_score": 30.0, "detailed_notes": ["+ 2 configurable parameters found", "+ 1 configurable parameters found", "+ 1 configurable parameters found", "+ 8 configurable parameters found", "+ Environment variable usage found", "+ Proper path handling methods used", "- Hardcoded paths detected (reduces portability)", "+ PowerShell Core compatibility considered", "+ Extension/plugin architecture found", "+ Alternative output format available", "+ PowerShell pipeline integration", "+ Customizable output formatting", "+ Basic error handling present", "+ Graceful degradation patterns detected"]}}}}, {"llm_name": "llm2", "overall_score": 69.225, "files": [{"path": "d:\\CodingModel\\ModelCompare\\FirstPassModelCompare\\llm2\\SafeDeleteReport.ps1", "lines": 60, "size": 2613}], "analysis_scores": {"Performance Analysis": {"score": 75, "notes": ["+ Uses ErrorAction SilentlyContinue (prevents performance hits from errors)", "+ Uses -File parameter for efficient enumeration", "+ Supports recursive scanning", "- String operations in loops may impact performance"]}, "Readability Analysis": {"score": 43, "notes": ["Excellent commenting (>15% comment ratio)", "Uses descriptive variable names", "Well-organized with 1 functions", "Good logical sectioning with comments", "Good code indentation"]}, "Code Quality Analysis": {"score": 47, "notes": ["+ Uses ErrorAction for error handling", "+ Uses type hints (2 found)", "+ Well-organized with 1 functions", "+ Consistent code indentation", "+ Uses approved PowerShell verbs", "+ Uses proper parameter block", "+ Reasonable line lengths (<10% over 120 chars)", "+ Good variable naming practices"]}, "Documentation Analysis": {"score": 30, "notes": ["- No README documentation found", "+ Excellent inline commenting (>15% average)", "+ All files have header comments", "+ Good use of section comments", "- No PowerShell help documentation found"]}, "Requirements Traceability Analysis": {"score": 98.9, "notes": {"requirements_total": 10, "requirements_implemented": 10, "mandatory_requirements": 10, "mandatory_implemented": 10, "traceability_matrix": {"requirements": {"REQ-001": {"text": "Script must run on Windows platform", "type": "platform", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 2, "status": "\u2713 PASS"}, "REQ-002": {"text": "Must identify files that are safe to delete", "type": "functionality", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-003": {"text": "Must NOT actually delete files (identification only)", "type": "safety", "mandatory": true, "implemented": true, "quality_score": 95, "evidence_count": 2, "status": "\u2713 PASS"}, "REQ-004": {"text": "Must provide ranking/scoring of safety level", "type": "functionality", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 5, "status": "\u2713 PASS"}, "REQ-005": {"text": "Report must include safety-score field", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 3, "status": "\u2713 PASS"}, "REQ-006": {"text": "Report must include parameters that went into score consideration", "type": "output", "mandatory": true, "implemented": true, "quality_score": 94, "evidence_count": 1, "status": "\u2713 PASS"}, "REQ-007": {"text": "Report must include file name", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-008": {"text": "Report must include file size", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-009": {"text": "Report must include date created", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-010": {"text": "Report must include date updated/modified", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}}, "summary": {"total_requirements": 10, "implemented": 10, "not_implemented": 0, "mandatory_met": 10, "optional_met": 0}}, "requirement_traces": [{"id": "REQ-001", "text": "Script must run on Windows platform", "implemented": true, "quality": 100, "evidence_count": 2}, {"id": "REQ-002", "text": "Must identify files that are safe to delete", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-003", "text": "Must NOT actually delete files (identification only)", "implemented": true, "quality": 95, "evidence_count": 2}, {"id": "REQ-004", "text": "Must provide ranking/scoring of safety level", "implemented": true, "quality": 100, "evidence_count": 5}, {"id": "REQ-005", "text": "Report must include safety-score field", "implemented": true, "quality": 100, "evidence_count": 3}, {"id": "REQ-006", "text": "Report must include parameters that went into score consideration", "implemented": true, "quality": 94, "evidence_count": 1}, {"id": "REQ-007", "text": "Report must include file name", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-008", "text": "Report must include file size", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-009", "text": "Report must include date created", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-010", "text": "Report must include date updated/modified", "implemented": true, "quality": 100, "evidence_count": 4}]}}, "Security Analysis": {"score": 94.0, "notes": {"security_issues": {"MEDIUM_input_validation": ["param(\n    [string]$Path = '.',\n    [string]$ReportFile = 'SafeDeleteReport.csv'\n)\n\n", "param(\n        [System.IO.FileInfo]$File\n    )\n    "], "MEDIUM_error_handling": ["-ErrorAction SilentlyContinue"]}, "good_practices": {}, "files_analyzed": 1, "total_content_length": 2554, "security_score_breakdown": {"critical_issues": 0, "high_risk_issues": 0, "medium_risk_issues": 3, "good_practices_count": 0, "security_categories_analyzed": 11, "practice_categories_found": 0}}}, "Adaptability Analysis": {"score": 27.5, "notes": {"configuration_score": 50.0, "cross_platform_score": 0.0, "extensibility_score": 40.0, "environment_adaptation_score": 0.0, "input_output_flexibility_score": 40.0, "error_recovery_score": 30.0, "detailed_notes": ["+ 2 configurable parameters found", "+ 12 configurable parameters found", "- Hardcoded paths detected (reduces portability)", "+ PowerShell Core compatibility considered", "+ Some modularity with 1 function(s)", "+ Extension/plugin architecture found", "+ Alternative output format available", "+ PowerShell pipeline integration", "+ Basic error handling present", "+ Graceful degradation patterns detected"]}}}}, {"llm_name": "llm3", "overall_score": 74.95500000000001, "files": [{"path": "d:\\CodingModel\\ModelCompare\\FirstPassModelCompare\\llm3\\README_FileDeletionSafetyReport.md", "lines": 68, "size": 3144}, {"path": "d:\\CodingModel\\ModelCompare\\FirstPassModelCompare\\llm3\\scripts\\FileDeletionSafetyReport.ps1", "lines": 230, "size": 9575}], "analysis_scores": {"Performance Analysis": {"score": 70, "notes": ["+ Uses ErrorAction SilentlyContinue (prevents performance hits from errors)", "+ Implements result limiting for memory efficiency", "+ Shows evidence of caching/pre-computation", "- Multiple Where-Object filters (2) after enumeration", "- String operations in loops may impact performance", "+ Good balance of features and performance", "- Contains nested loops (1) - potential O(n\u00b2) complexity"]}, "Readability Analysis": {"score": 53, "notes": ["Adequate commenting (>5% comment ratio)", "Includes PowerShell help documentation", "Comprehensive help documentation", "Uses descriptive variable names", "Well-organized with 1 functions", "Good logical sectioning with comments", "Good code indentation"]}, "Code Quality Analysis": {"score": 62, "notes": ["+ Uses ErrorAction for error handling", "+ Uses Parameter attributes", "+ Uses type hints (16 found)", "+ Well-organized with 1 functions", "+ Consistent code indentation", "+ Uses CmdletBinding for advanced functions", "+ Uses proper parameter block", "+ Reasonable line lengths (<10% over 120 chars)", "+ Good variable naming practices"]}, "Documentation Analysis": {"score": 75, "notes": ["+ Includes README documentation", "+ README contains: usage, examples, features, parameters", "+ README includes code examples", "+ Comprehensive README documentation", "+ Adequate inline commenting (>5% average)", "+ Good use of section comments", "+ All PowerShell files have help documentation", "+ 1 files have comprehensive help (4+ sections)"]}, "Requirements Traceability Analysis": {"score": 99.5, "notes": {"requirements_total": 10, "requirements_implemented": 10, "mandatory_requirements": 10, "mandatory_implemented": 10, "traceability_matrix": {"requirements": {"REQ-001": {"text": "Script must run on Windows platform", "type": "platform", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-002": {"text": "Must identify files that are safe to delete", "type": "functionality", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-003": {"text": "Must NOT actually delete files (identification only)", "type": "safety", "mandatory": true, "implemented": true, "quality_score": 95, "evidence_count": 2, "status": "\u2713 PASS"}, "REQ-004": {"text": "Must provide ranking/scoring of safety level", "type": "functionality", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 5, "status": "\u2713 PASS"}, "REQ-005": {"text": "Report must include safety-score field", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 3, "status": "\u2713 PASS"}, "REQ-006": {"text": "Report must include parameters that went into score consideration", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 3, "status": "\u2713 PASS"}, "REQ-007": {"text": "Report must include file name", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 3, "status": "\u2713 PASS"}, "REQ-008": {"text": "Report must include file size", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-009": {"text": "Report must include date created", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-010": {"text": "Report must include date updated/modified", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}}, "summary": {"total_requirements": 10, "implemented": 10, "not_implemented": 0, "mandatory_met": 10, "optional_met": 0}}, "requirement_traces": [{"id": "REQ-001", "text": "Script must run on Windows platform", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-002", "text": "Must identify files that are safe to delete", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-003", "text": "Must NOT actually delete files (identification only)", "implemented": true, "quality": 95, "evidence_count": 2}, {"id": "REQ-004", "text": "Must provide ranking/scoring of safety level", "implemented": true, "quality": 100, "evidence_count": 5}, {"id": "REQ-005", "text": "Report must include safety-score field", "implemented": true, "quality": 100, "evidence_count": 3}, {"id": "REQ-006", "text": "Report must include parameters that went into score consideration", "implemented": true, "quality": 100, "evidence_count": 3}, {"id": "REQ-007", "text": "Report must include file name", "implemented": true, "quality": 100, "evidence_count": 3}, {"id": "REQ-008", "text": "Report must include file size", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-009", "text": "Report must include date created", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-010", "text": "Report must include date updated/modified", "implemented": true, "quality": 100, "evidence_count": 4}]}}, "Security Analysis": {"score": 100, "notes": {"security_issues": {"MEDIUM_input_validation": ["Param(\n    [Parameter(Position=0)", "param([long]$Bytes)\n    "], "MEDIUM_error_handling": ["-ErrorAction SilentlyContinue"]}, "good_practices": {"safe_file_operations": ["Test-Path", "-LiteralPath", "Resolve-Path"], "logging_auditing": ["Write-Warning"]}, "files_analyzed": 1, "total_content_length": 9346, "security_score_breakdown": {"critical_issues": 0, "high_risk_issues": 0, "medium_risk_issues": 3, "good_practices_count": 4, "security_categories_analyzed": 11, "practice_categories_found": 2}}}, "Adaptability Analysis": {"score": 31.8, "notes": {"configuration_score": 65.0, "cross_platform_score": 20.0, "extensibility_score": 30.0, "environment_adaptation_score": 0.0, "input_output_flexibility_score": 35.0, "error_recovery_score": 20.0, "detailed_notes": ["+ 1 configurable parameters found", "+ 1 configurable parameters found", "+ 2 configurable parameters found", "+ 47 configurable parameters found", "+ Configuration file support detected", "+ Environment variable usage found", "+ Switch parameters for boolean options", "+ Proper path handling methods used", "+ PowerShell Core compatibility considered", "+ Some modularity with 1 function(s)", "+ Extension/plugin architecture found", "+ Data-driven processing patterns detected", "+ Multiple output formats supported (2 types)", "+ PowerShell pipeline integration", "+ Customizable output formatting"]}}}}, {"llm_name": "llm4", "overall_score": 75.225, "files": [{"path": "d:\\CodingModel\\ModelCompare\\FirstPassModelCompare\\llm4\\create-test-files.bat", "lines": 51, "size": 1561}, {"path": "d:\\CodingModel\\ModelCompare\\FirstPassModelCompare\\llm4\\README.md", "lines": 192, "size": 7077}, {"path": "d:\\CodingModel\\ModelCompare\\FirstPassModelCompare\\llm4\\run-analyzer.bat", "lines": 51, "size": 1577}, {"path": "d:\\CodingModel\\ModelCompare\\FirstPassModelCompare\\llm4\\Safe-Delete-Analyzer.ps1", "lines": 361, "size": 11832}], "analysis_scores": {"Performance Analysis": {"score": 69, "notes": ["+ Uses ErrorAction SilentlyContinue (prevents performance hits from errors)", "+ Uses -File parameter for efficient enumeration", "+ Implements result limiting for memory efficiency", "+ Shows evidence of caching/pre-computation", "- String operations in loops may impact performance", "- Contains nested loops (1) - potential O(n\u00b2) complexity"]}, "Readability Analysis": {"score": 53, "notes": ["Adequate commenting (>5% comment ratio)", "Includes PowerShell help documentation", "Comprehensive help documentation", "Uses descriptive variable names", "Well-organized with 2 functions", "Good logical sectioning with comments", "Good code indentation"]}, "Code Quality Analysis": {"score": 80, "notes": ["+ Implements try-catch error handling", "+ Uses Parameter attributes", "+ Supports pipeline input", "+ Uses type hints (6 found)", "+ Well-organized with 2 functions", "+ Consistent code indentation", "+ Uses approved PowerShell verbs", "+ Uses CmdletBinding for advanced functions", "+ Uses proper parameter block", "+ Reasonable line lengths (<10% over 120 chars)", "+ Good variable naming practices"]}, "Documentation Analysis": {"score": 85, "notes": ["+ Includes README documentation", "+ README contains: usage, examples, features, installation, parameters", "+ README includes code examples", "+ Comprehensive README documentation", "+ Adequate inline commenting (>5% average)", "+ All files have header comments", "+ Good use of section comments", "+ All PowerShell files have help documentation", "+ 1 files have comprehensive help (4+ sections)"]}, "Requirements Traceability Analysis": {"score": 99.5, "notes": {"requirements_total": 10, "requirements_implemented": 10, "mandatory_requirements": 10, "mandatory_implemented": 10, "traceability_matrix": {"requirements": {"REQ-001": {"text": "Script must run on Windows platform", "type": "platform", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-002": {"text": "Must identify files that are safe to delete", "type": "functionality", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 5, "status": "\u2713 PASS"}, "REQ-003": {"text": "Must NOT actually delete files (identification only)", "type": "safety", "mandatory": true, "implemented": true, "quality_score": 95, "evidence_count": 1, "status": "\u2713 PASS"}, "REQ-004": {"text": "Must provide ranking/scoring of safety level", "type": "functionality", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 5, "status": "\u2713 PASS"}, "REQ-005": {"text": "Report must include safety-score field", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 3, "status": "\u2713 PASS"}, "REQ-006": {"text": "Report must include parameters that went into score consideration", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 3, "status": "\u2713 PASS"}, "REQ-007": {"text": "Report must include file name", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-008": {"text": "Report must include file size", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-009": {"text": "Report must include date created", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 4, "status": "\u2713 PASS"}, "REQ-010": {"text": "Report must include date updated/modified", "type": "output", "mandatory": true, "implemented": true, "quality_score": 100, "evidence_count": 3, "status": "\u2713 PASS"}}, "summary": {"total_requirements": 10, "implemented": 10, "not_implemented": 0, "mandatory_met": 10, "optional_met": 0}}, "requirement_traces": [{"id": "REQ-001", "text": "Script must run on Windows platform", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-002", "text": "Must identify files that are safe to delete", "implemented": true, "quality": 100, "evidence_count": 5}, {"id": "REQ-003", "text": "Must NOT actually delete files (identification only)", "implemented": true, "quality": 95, "evidence_count": 1}, {"id": "REQ-004", "text": "Must provide ranking/scoring of safety level", "implemented": true, "quality": 100, "evidence_count": 5}, {"id": "REQ-005", "text": "Report must include safety-score field", "implemented": true, "quality": 100, "evidence_count": 3}, {"id": "REQ-006", "text": "Report must include parameters that went into score consideration", "implemented": true, "quality": 100, "evidence_count": 3}, {"id": "REQ-007", "text": "Report must include file name", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-008", "text": "Report must include file size", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-009", "text": "Report must include date created", "implemented": true, "quality": 100, "evidence_count": 4}, {"id": "REQ-010", "text": "Report must include date updated/modified", "implemented": true, "quality": 100, "evidence_count": 3}]}}, "Security Analysis": {"score": 100, "notes": {"security_issues": {"MEDIUM_input_validation": ["param(\n    [Parameter(ValueFromPipeline = $true)", "param(\n        [System.IO.FileInfo]$File\n    )\n    \n    ", "param(\n        [string]$DirectoryPath,\n        [int]$CurrentDepth = 0\n    )\n    \n    "], "MEDIUM_error_handling": ["-ErrorAction SilentlyContinue"]}, "good_practices": {"safe_file_operations": ["Test-Path", "Test-Path"], "logging_auditing": ["Write-Warning", "Write-Warning", "Write-Warning"]}, "files_analyzed": 1, "total_content_length": 11472, "security_score_breakdown": {"critical_issues": 0, "high_risk_issues": 0, "medium_risk_issues": 4, "good_practices_count": 5, "security_categories_analyzed": 11, "practice_categories_found": 2}}}, "Adaptability Analysis": {"score": 13.5, "notes": {"configuration_score": 25.0, "cross_platform_score": 5.0, "extensibility_score": 15.0, "environment_adaptation_score": 5.0, "input_output_flexibility_score": 15.0, "error_recovery_score": 10.0, "detailed_notes": ["+ 1 configurable parameters found", "+ 1 configurable parameters found", "+ 3 configurable parameters found", "+ 31 configurable parameters found", "+ Switch parameters for boolean options", "+ Proper path handling methods used", "- Hardcoded paths detected (reduces portability)", "+ PowerShell Core compatibility considered", "+ Some modularity with 2 function(s)", "+ Extension/plugin architecture found", "+ Data-driven processing patterns detected", "+ PowerShell version compatibility checks", "+ Alternative output format available", "+ PowerShell pipeline integration", "+ Customizable output formatting"]}}}}];
         let chartInstances = {};
         let isUpdating = false; // Prevent recursive updates
         
@@ -1109,6 +1353,9 @@
             // Update table rankings
             updateTableRankings(sortedResults);
             
+            // Update winner summary
+            updateWinnerSummary(sortedResults);
+            
             // Update charts
             updateCharts(llmNames, newOverallScores);
         }
@@ -1121,6 +1368,81 @@
                     rankElement.textContent = `#${index + 1}`;
                 }
             });
+        }
+        
+        function updateWinnerSummary(sortedResults) {
+            const winner = sortedResults[0]; // Top performer
+            if (!winner) return;
+            
+            // Color mapping for each LLM based on chart colors
+            const llmColors = {
+                'llm1': {
+                    background: 'linear-gradient(135deg, rgba(255, 99, 132, 0.9) 0%, rgba(255, 99, 132, 0.7) 100%)',
+                    shadow: 'rgba(255, 99, 132, 0.3)'
+                },
+                'llm2': {
+                    background: 'linear-gradient(135deg, rgba(54, 162, 235, 0.9) 0%, rgba(54, 162, 235, 0.7) 100%)',
+                    shadow: 'rgba(54, 162, 235, 0.3)'
+                },
+                'llm3': {
+                    background: 'linear-gradient(135deg, rgba(255, 205, 86, 0.9) 0%, rgba(255, 205, 86, 0.7) 100%)',
+                    shadow: 'rgba(255, 205, 86, 0.3)'
+                },
+                'llm4': {
+                    background: 'linear-gradient(135deg, rgba(75, 192, 192, 0.9) 0%, rgba(75, 192, 192, 0.7) 100%)',
+                    shadow: 'rgba(75, 192, 192, 0.3)'
+                }
+            };
+            
+            // Update winner summary background color
+            const winnerSummary = document.querySelector('.winner-summary');
+            if (winnerSummary && llmColors[winner.llm_name]) {
+                const colors = llmColors[winner.llm_name];
+                winnerSummary.style.background = colors.background;
+                winnerSummary.style.boxShadow = `0 4px 15px ${colors.shadow}`;
+            }
+            
+            // Update winner name and score
+            const scoreElement = document.querySelector('.winner-summary .score');
+            const labelElement = document.querySelector('.winner-summary .label');
+            
+            if (scoreElement) {
+                scoreElement.textContent = winner.newScore.toFixed(1);
+            }
+            if (labelElement) {
+                labelElement.textContent = winner.llm_name;
+            }
+            
+            // Get individual category scores for the winner
+            const analysisScores = winner.analysis_scores || {};
+            const strengthsData = [];
+            
+            Object.keys(analysisScores).forEach(category => {
+                const score = analysisScores[category]?.score || 0;
+                strengthsData.push({
+                    name: category,
+                    score: score
+                });
+            });
+            
+            // Sort by score and take top 4 strengths
+            strengthsData.sort((a, b) => b.score - a.score);
+            const topStrengths = strengthsData.slice(0, 4);
+            
+            // Update strengths grid
+            const strengthGrid = document.querySelector('.strength-grid');
+            if (strengthGrid) {
+                strengthGrid.innerHTML = '';
+                topStrengths.forEach(strength => {
+                    const strengthItem = document.createElement('div');
+                    strengthItem.className = 'strength-item';
+                    strengthItem.innerHTML = `
+                        <div class="strength-name">${strength.name}</div>
+                        <div class="strength-score">${strength.score.toFixed(1)}/100</div>
+                    `;
+                    strengthGrid.appendChild(strengthItem);
+                });
+            }
         }
         
         function updateCharts(llmNames, newScores) {
@@ -1165,7 +1487,7 @@
                 labels: ["llm1", "llm2", "llm3", "llm4"],
                 datasets: [{
                     label: 'Overall Score',
-                    data: [83.88636363636364, 75.79545454545453, 81.4590909090909, 82.93181818181817],
+                    data: [74.6590909090909, 70.61363636363636, 75.86818181818182, 76.06818181818181],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.8)',
                         'rgba(54, 162, 235, 0.8)',
@@ -1215,7 +1537,7 @@
             type: 'radar',
             data: {
                 labels: ["Adaptability", "Code Quality", "Documentation", "Performance", "Readability", "Requirements Traceability", "Security"],
-                datasets: [{"label": "llm1", "data": [39.5, 75, 70, 74, 93, 99.5, 100], "backgroundColor": "rgba(255, 99, 132, 0.8)", "borderColor": "rgba(255, 99, 132, 1)", "borderWidth": 2, "fill": true, "pointRadius": 4}, {"label": "llm2", "data": [27.5, 64, 60, 55, 93, 98.9, 94.0], "backgroundColor": "rgba(54, 162, 235, 0.8)", "borderColor": "rgba(54, 162, 235, 1)", "borderWidth": 2, "fill": true, "pointRadius": 4}, {"label": "llm3", "data": [31.8, 78, 100, 55, 100, 99.5, 100], "backgroundColor": "rgba(255, 205, 86, 0.8)", "borderColor": "rgba(255, 205, 86, 1)", "borderWidth": 2, "fill": true, "pointRadius": 4}, {"label": "llm4", "data": [13.5, 95, 100, 62, 100, 99.5, 100], "backgroundColor": "rgba(75, 192, 192, 0.8)", "borderColor": "rgba(75, 192, 192, 1)", "borderWidth": 2, "fill": true, "pointRadius": 4}]
+                datasets: [{"label": "llm1", "data": [39.5, 66, 35, 74, 43, 99.5, 100], "backgroundColor": "rgba(255, 99, 132, 0.8)", "borderColor": "rgba(255, 99, 132, 1)", "borderWidth": 2, "fill": true, "pointRadius": 4}, {"label": "llm2", "data": [27.5, 47, 30, 75, 43, 98.9, 94.0], "backgroundColor": "rgba(54, 162, 235, 0.8)", "borderColor": "rgba(54, 162, 235, 1)", "borderWidth": 2, "fill": true, "pointRadius": 4}, {"label": "llm3", "data": [31.8, 62, 75, 70, 53, 99.5, 100], "backgroundColor": "rgba(255, 205, 86, 0.8)", "borderColor": "rgba(255, 205, 86, 1)", "borderWidth": 2, "fill": true, "pointRadius": 4}, {"label": "llm4", "data": [13.5, 80, 85, 69, 53, 99.5, 100], "backgroundColor": "rgba(75, 192, 192, 0.8)", "borderColor": "rgba(75, 192, 192, 1)", "borderWidth": 2, "fill": true, "pointRadius": 4}]
             },
             options: {
                 responsive: true,
@@ -1262,6 +1584,188 @@
             const isVisible = content.style.display === 'block';
             content.style.display = isVisible ? 'none' : 'block';
         }
+        
+        // Scoring guide modal functionality
+        function showScoringGuide(analysisType) {
+            const modal = document.getElementById('scoringModal');
+            const title = document.getElementById('modalTitle');
+            const breakdown = document.getElementById('scoringBreakdown');
+            
+            title.textContent = analysisType + ' - Scoring Guide';
+            breakdown.innerHTML = getScoringBreakdown(analysisType);
+            modal.style.display = 'block';
+        }
+        
+        function closeScoringGuide() {
+            document.getElementById('scoringModal').style.display = 'none';
+        }
+        
+        function getScoringBreakdown(analysisType) {
+            const guides = {
+                'Performance Analysis': `
+                    <div class="scoring-component">
+                        <div class="component-name">Time Complexity Assessment <span class="component-weight">30 pts</span></div>
+                        <div class="component-description">Evaluates algorithmic efficiency and computational complexity of the solution</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Space Complexity Assessment <span class="component-weight">20 pts</span></div>
+                        <div class="component-description">Analyzes memory usage patterns and storage efficiency</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Scalability Considerations <span class="component-weight">25 pts</span></div>
+                        <div class="component-description">Reviews how well the solution handles increasing data sizes or load</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Resource Optimization <span class="component-weight">25 pts</span></div>
+                        <div class="component-description">Checks for efficient use of system resources and optimization opportunities</div>
+                    </div>
+                `,
+                'Readability Analysis': `
+                    <div class="scoring-component">
+                        <div class="component-name">Code Clarity <span class="component-weight">25 pts</span></div>
+                        <div class="component-description">How easily the code can be understood by other developers</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Variable Naming <span class="component-weight">20 pts</span></div>
+                        <div class="component-description">Use of descriptive, meaningful variable and function names</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Code Structure <span class="component-weight">25 pts</span></div>
+                        <div class="component-description">Logical organization and flow of the code</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Comments and Documentation <span class="component-weight">15 pts</span></div>
+                        <div class="component-description">Presence and quality of inline comments and documentation</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Consistency <span class="component-weight">15 pts</span></div>
+                        <div class="component-description">Consistent coding style and formatting throughout</div>
+                    </div>
+                `,
+                'Code Quality Analysis': `
+                    <div class="scoring-component">
+                        <div class="component-name">Code Structure & Organization <span class="component-weight">30 pts</span></div>
+                        <div class="component-description">Proper modularization, separation of concerns, and logical code organization</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Error Handling & Robustness <span class="component-weight">25 pts</span></div>
+                        <div class="component-description">Comprehensive error handling, input validation, and edge case management</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Best Practices Adherence <span class="component-weight">20 pts</span></div>
+                        <div class="component-description">Following language-specific conventions, design patterns, and industry standards</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Code Maintainability <span class="component-weight">15 pts</span></div>
+                        <div class="component-description">How easily the code can be modified, extended, and maintained over time</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Testing Considerations <span class="component-weight">10 pts</span></div>
+                        <div class="component-description">Testability of the code and presence of testing-friendly design</div>
+                    </div>
+                `,
+                'Documentation Analysis': `
+                    <div class="scoring-component">
+                        <div class="component-name">Code Comments <span class="component-weight">30 pts</span></div>
+                        <div class="component-description">Quality and usefulness of inline comments and code documentation</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Function/Method Documentation <span class="component-weight">25 pts</span></div>
+                        <div class="component-description">Docstrings, parameter descriptions, and return value documentation</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Usage Examples <span class="component-weight">20 pts</span></div>
+                        <div class="component-description">Presence of clear examples showing how to use the code</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">API Documentation <span class="component-weight">15 pts</span></div>
+                        <div class="component-description">Clear interface documentation for public methods and classes</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">README/Overview <span class="component-weight">10 pts</span></div>
+                        <div class="component-description">High-level documentation explaining purpose and usage</div>
+                    </div>
+                `,
+                'Requirements Traceability Analysis': `
+                    <div class="scoring-component">
+                        <div class="component-name">Core Requirements Coverage <span class="component-weight">40 pts</span></div>
+                        <div class="component-description">How completely the solution addresses the main requirements</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Edge Cases Handling <span class="component-weight">25 pts</span></div>
+                        <div class="component-description">Consideration and handling of edge cases and boundary conditions</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Input Validation <span class="component-weight">20 pts</span></div>
+                        <div class="component-description">Proper validation of inputs according to requirements</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Output Correctness <span class="component-weight">15 pts</span></div>
+                        <div class="component-description">Accuracy and format of output according to specifications</div>
+                    </div>
+                `,
+                'Security Analysis': `
+                    <div class="scoring-component">
+                        <div class="component-name">Input Validation <span class="component-weight">25 pts</span></div>
+                        <div class="component-description">Proper sanitization and validation of all inputs</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Data Protection <span class="component-weight">25 pts</span></div>
+                        <div class="component-description">Safe handling of sensitive data and proper access controls</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Error Information Exposure <span class="component-weight">20 pts</span></div>
+                        <div class="component-description">Avoiding disclosure of sensitive information in error messages</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Resource Management <span class="component-weight">15 pts</span></div>
+                        <div class="component-description">Proper cleanup and resource management to prevent leaks</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Secure Coding Practices <span class="component-weight">15 pts</span></div>
+                        <div class="component-description">Following security best practices and avoiding common vulnerabilities</div>
+                    </div>
+                `,
+                'Adaptability Analysis': `
+                    <div class="scoring-component">
+                        <div class="component-name">Code Flexibility <span class="component-weight">30 pts</span></div>
+                        <div class="component-description">How easily the code can be modified for different use cases</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Configuration Support <span class="component-weight">25 pts</span></div>
+                        <div class="component-description">Availability of configuration options and parameterization</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Extensibility <span class="component-weight">25 pts</span></div>
+                        <div class="component-description">Design that supports future enhancements and feature additions</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Reusability <span class="component-weight">20 pts</span></div>
+                        <div class="component-description">Components that can be reused in different contexts</div>
+                    </div>
+                `
+            };
+            
+            return guides[analysisType] || '<p>Scoring guide not available for this analysis type.</p>';
+        }
+        
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('scoringModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
     </script>
+    
+    <!-- Scoring Guide Modal -->
+    <div id="scoringModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeScoringGuide()">&times;</span>
+            <h2 id="modalTitle">Scoring Guide</h2>
+            <div id="scoringBreakdown" class="scoring-breakdown">
+            </div>
+        </div>
+    </div>
 </body>
 </html>

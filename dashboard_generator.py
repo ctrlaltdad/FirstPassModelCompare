@@ -134,12 +134,15 @@ class DashboardGenerator:
             })
         
         # Generate the HTML
+        winner_summary = self._generate_winner_summary(llm_names, overall_scores, results, analyzer_categories)
+        
         html_content = self._generate_html_template(
             llm_names=llm_names,
             overall_scores=overall_scores,
             llm_datasets=llm_datasets,
             analyzer_categories=analyzer_categories,
             results=results,
+            winner_summary=winner_summary,
             timestamp=data.get('analysis_timestamp', datetime.now().isoformat())
         )
         
@@ -147,6 +150,76 @@ class DashboardGenerator:
             f.write(html_content)
         
         print(f"Dashboard generated: {output_path}")
+    
+    def _generate_winner_summary(self, llm_names: List[str], overall_scores: List[float], 
+                                results: List[Dict], analyzer_categories: List[str]) -> str:
+        """Generate the winner summary section HTML"""
+        
+        # Find the winning LLM
+        best_score_idx = overall_scores.index(max(overall_scores))
+        winner_name = llm_names[best_score_idx]
+        winner_score = overall_scores[best_score_idx]
+        winner_result = results[best_score_idx]
+        
+        # Get the winner's analysis scores
+        winner_analysis = winner_result.get('analysis_scores', {})
+        
+        # Find top performing areas (scores >= 80)
+        strengths = []
+        for category in analyzer_categories:
+            score_data = winner_analysis.get(category, {})
+            if isinstance(score_data, dict):
+                score = score_data.get('score', 0)
+                if score >= 80:
+                    strengths.append({
+                        'name': category.replace(' Analysis', ''),
+                        'score': score
+                    })
+        
+        # Sort strengths by score (highest first)
+        strengths.sort(key=lambda x: x['score'], reverse=True)
+        
+        # If no scores >= 80, take the top 4 scoring areas
+        if not strengths:
+            all_scores = []
+            for category in analyzer_categories:
+                score_data = winner_analysis.get(category, {})
+                if isinstance(score_data, dict):
+                    score = score_data.get('score', 0)
+                    all_scores.append({
+                        'name': category.replace(' Analysis', ''),
+                        'score': score
+                    })
+            all_scores.sort(key=lambda x: x['score'], reverse=True)
+            strengths = all_scores[:4]
+        
+        # Generate strengths HTML
+        strengths_html = []
+        for strength in strengths[:6]:  # Limit to top 6
+            strengths_html.append(f'''
+                <div class="strength-item">
+                    <div class="strength-name">{strength['name']}</div>
+                    <div class="strength-score">{strength['score']:.1f}/100</div>
+                </div>
+            ''')
+        
+        return f'''
+        <div class="winner-summary">
+            <h2>🏆 Top Performing Solution</h2>
+            <div class="winner-details">
+                <div class="winner-score">
+                    <div class="score">{winner_score:.1f}</div>
+                    <div class="label">{winner_name}</div>
+                </div>
+                <div class="winner-strengths">
+                    <h3>Key Strengths</h3>
+                    <div class="strength-grid">
+                        {''.join(strengths_html)}
+                    </div>
+                </div>
+            </div>
+        </div>
+        '''
     
     def _generate_weight_controls(self, analyzer_categories: List[str], results: List[Dict]) -> str:
         """Generate HTML for weight controls"""
@@ -207,7 +280,7 @@ class DashboardGenerator:
     
     def _generate_html_template(self, llm_names: List[str], overall_scores: List[float], 
                               llm_datasets: List[Dict], analyzer_categories: List[str],
-                              results: List[Dict], timestamp: str) -> str:
+                              results: List[Dict], winner_summary: str, timestamp: str) -> str:
         """Generate the complete HTML template"""
         
         # Generate detailed results table
@@ -748,12 +821,218 @@ class DashboardGenerator:
             transition: background-color 0.3s;
         }}
         
+        .scoring-guide-btn {{
+            background: #6b46c1;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            margin-left: 10px;
+            transition: background 0.2s;
+        }}
+        
+        .scoring-guide-btn:hover {{
+            background: #553c9a;
+        }}
+        
+        .modal {{
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }}
+        
+        .modal-content {{
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 30px;
+            border: none;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 700px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            position: relative;
+        }}
+        
+        .close {{
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            cursor: pointer;
+        }}
+        
+        .close:hover,
+        .close:focus {{
+            color: #000;
+            text-decoration: none;
+        }}
+        
+        .scoring-breakdown {{
+            margin-top: 20px;
+        }}
+        
+        .scoring-component {{
+            background: #f8f9fa;
+            border-left: 4px solid #4299e1;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }}
+        
+        .component-name {{
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }}
+        
+        .component-description {{
+            color: #4a5568;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }}
+        
+        .component-weight {{
+            float: right;
+            background: #4299e1;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }}
+        
+        .component-breakdown {{
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #38b2ac;
+        }}
+        
+        .component-scores {{
+            list-style: none;
+            padding: 0;
+            margin: 5px 0;
+        }}
+        
+        .component-scores li {{
+            padding: 5px 0;
+            border-bottom: 1px solid #e2e8f0;
+            color: #4a5568;
+            font-size: 0.9em;
+        }}
+        
+        .component-scores li:last-child {{
+            border-bottom: none;
+        }}
+        
+        .winner-summary {{
+            background: linear-gradient(135deg, #48bb78 0%, #38b2ac 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+        }}
+        
+        .winner-summary h2 {{
+            margin: 0 0 15px 0;
+            font-size: 1.8em;
+            font-weight: 300;
+            text-align: center;
+        }}
+        
+        .winner-details {{
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 25px;
+            align-items: start;
+        }}
+        
+        .winner-score {{
+            text-align: center;
+        }}
+        
+        .winner-score .score {{
+            font-size: 3.5em;
+            font-weight: bold;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }}
+        
+        .winner-score .label {{
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-top: 5px;
+        }}
+        
+        .winner-strengths {{
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }}
+        
+        .winner-strengths h3 {{
+            margin: 0 0 15px 0;
+            font-size: 1.3em;
+            color: rgba(255,255,255,0.95);
+        }}
+        
+        .strength-grid {{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }}
+        
+        .strength-item {{
+            background: rgba(255,255,255,0.1);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }}
+        
+        .strength-item .strength-name {{
+            font-weight: bold;
+            margin-bottom: 4px;
+        }}
+        
+        .strength-item .strength-score {{
+            opacity: 0.8;
+            font-size: 0.85em;
+        }}
+        
         @media (max-width: 768px) {{
             .dashboard-grid {{
                 grid-template-columns: 1fr;
             }}
             
             .metric-grid {{
+                grid-template-columns: 1fr;
+            }}
+            
+            .modal-content {{
+                width: 95%;
+                margin: 10% auto;
+                padding: 20px;
+            }}
+            
+            .winner-details {{
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }}
+            
+            .strength-grid {{
                 grid-template-columns: 1fr;
             }}
         }}
@@ -765,6 +1044,8 @@ class DashboardGenerator:
         <p>Comprehensive comparison of AI-generated code solutions</p>
         <p><small>Generated on: {timestamp}</small></p>
     </div>
+    
+    {winner_summary}
     
     <div class="metric-grid">
         <div class="metric-card">
@@ -1313,7 +1594,189 @@ class DashboardGenerator:
             const isVisible = content.style.display === 'block';
             content.style.display = isVisible ? 'none' : 'block';
         }}
+        
+        // Scoring guide modal functionality
+        function showScoringGuide(analysisType) {{
+            const modal = document.getElementById('scoringModal');
+            const title = document.getElementById('modalTitle');
+            const breakdown = document.getElementById('scoringBreakdown');
+            
+            title.textContent = analysisType + ' - Scoring Guide';
+            breakdown.innerHTML = getScoringBreakdown(analysisType);
+            modal.style.display = 'block';
+        }}
+        
+        function closeScoringGuide() {{
+            document.getElementById('scoringModal').style.display = 'none';
+        }}
+        
+        function getScoringBreakdown(analysisType) {{
+            const guides = {{
+                'Performance Analysis': `
+                    <div class="scoring-component">
+                        <div class="component-name">Time Complexity Assessment <span class="component-weight">30 pts</span></div>
+                        <div class="component-description">Evaluates algorithmic efficiency and computational complexity of the solution</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Space Complexity Assessment <span class="component-weight">20 pts</span></div>
+                        <div class="component-description">Analyzes memory usage patterns and storage efficiency</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Scalability Considerations <span class="component-weight">25 pts</span></div>
+                        <div class="component-description">Reviews how well the solution handles increasing data sizes or load</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Resource Optimization <span class="component-weight">25 pts</span></div>
+                        <div class="component-description">Checks for efficient use of system resources and optimization opportunities</div>
+                    </div>
+                `,
+                'Readability Analysis': `
+                    <div class="scoring-component">
+                        <div class="component-name">Code Clarity <span class="component-weight">25 pts</span></div>
+                        <div class="component-description">How easily the code can be understood by other developers</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Variable Naming <span class="component-weight">20 pts</span></div>
+                        <div class="component-description">Use of descriptive, meaningful variable and function names</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Code Structure <span class="component-weight">25 pts</span></div>
+                        <div class="component-description">Logical organization and flow of the code</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Comments and Documentation <span class="component-weight">15 pts</span></div>
+                        <div class="component-description">Presence and quality of inline comments and documentation</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Consistency <span class="component-weight">15 pts</span></div>
+                        <div class="component-description">Consistent coding style and formatting throughout</div>
+                    </div>
+                `,
+                'Code Quality Analysis': `
+                    <div class="scoring-component">
+                        <div class="component-name">Code Structure & Organization <span class="component-weight">30 pts</span></div>
+                        <div class="component-description">Proper modularization, separation of concerns, and logical code organization</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Error Handling & Robustness <span class="component-weight">25 pts</span></div>
+                        <div class="component-description">Comprehensive error handling, input validation, and edge case management</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Best Practices Adherence <span class="component-weight">20 pts</span></div>
+                        <div class="component-description">Following language-specific conventions, design patterns, and industry standards</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Code Maintainability <span class="component-weight">15 pts</span></div>
+                        <div class="component-description">How easily the code can be modified, extended, and maintained over time</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Testing Considerations <span class="component-weight">10 pts</span></div>
+                        <div class="component-description">Testability of the code and presence of testing-friendly design</div>
+                    </div>
+                `,
+                'Documentation Analysis': `
+                    <div class="scoring-component">
+                        <div class="component-name">Code Comments <span class="component-weight">30 pts</span></div>
+                        <div class="component-description">Quality and usefulness of inline comments and code documentation</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Function/Method Documentation <span class="component-weight">25 pts</span></div>
+                        <div class="component-description">Docstrings, parameter descriptions, and return value documentation</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Usage Examples <span class="component-weight">20 pts</span></div>
+                        <div class="component-description">Presence of clear examples showing how to use the code</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">API Documentation <span class="component-weight">15 pts</span></div>
+                        <div class="component-description">Clear interface documentation for public methods and classes</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">README/Overview <span class="component-weight">10 pts</span></div>
+                        <div class="component-description">High-level documentation explaining purpose and usage</div>
+                    </div>
+                `,
+                'Requirements Traceability Analysis': `
+                    <div class="scoring-component">
+                        <div class="component-name">Core Requirements Coverage <span class="component-weight">40 pts</span></div>
+                        <div class="component-description">How completely the solution addresses the main requirements</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Edge Cases Handling <span class="component-weight">25 pts</span></div>
+                        <div class="component-description">Consideration and handling of edge cases and boundary conditions</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Input Validation <span class="component-weight">20 pts</span></div>
+                        <div class="component-description">Proper validation of inputs according to requirements</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Output Correctness <span class="component-weight">15 pts</span></div>
+                        <div class="component-description">Accuracy and format of output according to specifications</div>
+                    </div>
+                `,
+                'Security Analysis': `
+                    <div class="scoring-component">
+                        <div class="component-name">Input Validation <span class="component-weight">25 pts</span></div>
+                        <div class="component-description">Proper sanitization and validation of all inputs</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Data Protection <span class="component-weight">25 pts</span></div>
+                        <div class="component-description">Safe handling of sensitive data and proper access controls</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Error Information Exposure <span class="component-weight">20 pts</span></div>
+                        <div class="component-description">Avoiding disclosure of sensitive information in error messages</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Resource Management <span class="component-weight">15 pts</span></div>
+                        <div class="component-description">Proper cleanup and resource management to prevent leaks</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Secure Coding Practices <span class="component-weight">15 pts</span></div>
+                        <div class="component-description">Following security best practices and avoiding common vulnerabilities</div>
+                    </div>
+                `,
+                'Adaptability Analysis': `
+                    <div class="scoring-component">
+                        <div class="component-name">Code Flexibility <span class="component-weight">30 pts</span></div>
+                        <div class="component-description">How easily the code can be modified for different use cases</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Configuration Support <span class="component-weight">25 pts</span></div>
+                        <div class="component-description">Availability of configuration options and parameterization</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Extensibility <span class="component-weight">25 pts</span></div>
+                        <div class="component-description">Design that supports future enhancements and feature additions</div>
+                    </div>
+                    <div class="scoring-component">
+                        <div class="component-name">Reusability <span class="component-weight">20 pts</span></div>
+                        <div class="component-description">Components that can be reused in different contexts</div>
+                    </div>
+                `
+            }};
+            
+            return guides[analysisType] || '<p>Scoring guide not available for this analysis type.</p>';
+        }}
+        
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {{
+            const modal = document.getElementById('scoringModal');
+            if (event.target == modal) {{
+                modal.style.display = 'none';
+            }}
+        }}
     </script>
+    
+    <!-- Scoring Guide Modal -->
+    <div id="scoringModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeScoringGuide()">&times;</span>
+            <h2 id="modalTitle">Scoring Guide</h2>
+            <div id="scoringBreakdown" class="scoring-breakdown">
+            </div>
+        </div>
+    </div>
 </body>
 </html>"""
     
@@ -1438,23 +1901,103 @@ class DashboardGenerator:
                 details.append(f'<h4>{icon} {category}</h4>')
                 details.append(f'<div class="score-display">{score_data.get("score", 0):.1f}/100</div>')
                 
-                # Add notes
+                # Add scoring guide button
+                guide_id = category.lower().replace(' ', '_').replace('/', '_')
+                details.append(f'<button class="scoring-guide-btn" onclick="showScoringGuide(\'{category}\')">📊 How is this scored?</button>')
+                
+                # Add notes - focus on deductions and missing items
                 notes = score_data.get('notes', [])
                 
                 # Special handling for analyzers that store summary in max_score
-                if category in ["Requirements Traceability Analysis", "Security Analysis", "Adaptability Analysis"]:
+                if category in ["Requirements Traceability Analysis", "Security Analysis"]:
                     max_score_data = score_data.get('max_score', [])
                     if isinstance(max_score_data, list):
                         notes = max_score_data
+                elif category == "Adaptability Analysis":
+                    # Adaptability Analysis stores key points in notes.detailed_notes
+                    if isinstance(notes, dict) and 'detailed_notes' in notes:
+                        # Generate specific missing items based on component scores
+                        missing_items = self._generate_adaptability_missing_items(notes)
+                        
+                        if missing_items:
+                            details.append('<div class="deductions-section">')
+                            details.append('<h5>📉 Missing Adaptability Features</h5>')
+                            details.append('<ul class="key-points">')
+                            for item in missing_items:
+                                details.append(f'<li class="negative">{item}</li>')
+                            details.append('</ul>')
+                            details.append('</div>')
+                        else:
+                            details.append('<div class="no-deductions">✅ Strong adaptability across all areas</div>')
+                        
+                        notes = notes['detailed_notes']
+                elif category == "Readability Analysis":
+                    # Generate specific missing items based on readability details
+                    missing_items = self._generate_readability_missing_items(score_data)
+                    
+                    if missing_items:
+                        details.append('<div class="deductions-section">')
+                        details.append('<h5>📉 Readability Issues & Missing Elements</h5>')
+                        details.append('<ul class="key-points">')
+                        for item in missing_items:
+                            details.append(f'<li class="negative">{item}</li>')
+                        details.append('</ul>')
+                        details.append('</div>')
+                    else:
+                        details.append('<div class="no-deductions">✅ Excellent readability across all areas</div>')
+                    
+                    # Still use the regular notes for additional context
+                    notes = score_data.get('notes', [])
+                elif category == "Code Quality Analysis":
+                    # Generate specific missing items based on code quality details
+                    missing_items = self._generate_code_quality_missing_items(score_data)
+                    
+                    if missing_items:
+                        details.append('<div class="deductions-section">')
+                        details.append('<h5>📉 Code Quality Issues & Missing Elements</h5>')
+                        details.append('<ul class="key-points">')
+                        for item in missing_items:
+                            details.append(f'<li class="negative">{item}</li>')
+                        details.append('</ul>')
+                        details.append('</div>')
+                    else:
+                        details.append('<div class="no-deductions">✅ Excellent code quality across all areas</div>')
+                    
+                    # Still use the regular notes for additional context
+                    notes = score_data.get('notes', [])
+                elif category == "Documentation Analysis":
+                    # Generate specific missing items based on documentation details
+                    missing_items = self._generate_documentation_missing_items(score_data)
+                    
+                    if missing_items:
+                        details.append('<div class="deductions-section">')
+                        details.append('<h5>📉 Documentation Issues & Missing Elements</h5>')
+                        details.append('<ul class="key-points">')
+                        for item in missing_items:
+                            details.append(f'<li class="negative">{item}</li>')
+                        details.append('</ul>')
+                        details.append('</div>')
+                    else:
+                        details.append('<div class="no-deductions">✅ Excellent documentation across all areas</div>')
+                    
+                    # Still use the regular notes for additional context
+                    notes = score_data.get('notes', [])
                 
-                if notes and isinstance(notes, list):
+                # Filter to show only deductions and key missing items
+                filtered_notes = self._filter_notes_for_deductions(notes, category)
+                
+                if filtered_notes:
+                    details.append('<div class="deductions-section">')
+                    details.append('<h5>📉 Score Deductions & Missing Items</h5>')
                     details.append('<ul class="key-points">')
-                    max_notes = 15 if category in ["Requirements Traceability Analysis", "Security Analysis", "Adaptability Analysis"] else 5
-                    for note in notes[:max_notes]:
-                        if note.strip():  # Skip empty strings
+                    for note in filtered_notes[:10]:  # Limit to top 10 issues
+                        if note.strip():
                             css_class = self._get_note_css_class(note)
                             details.append(f'<li class="{css_class}">{note}</li>')
                     details.append('</ul>')
+                    details.append('</div>')
+                else:
+                    details.append('<div class="no-deductions">✅ No significant deductions found</div>')
                 
                 details.append('</div>')
         
@@ -1462,6 +2005,305 @@ class DashboardGenerator:
         
         return "".join(details)
     
+    def _filter_notes_for_deductions(self, notes: List[str], category: str) -> List[str]:
+        """Filter notes to show only deductions and missing items"""
+        if not notes:
+            return []
+        
+        filtered = []
+        for note in notes:
+            note_lower = note.lower()
+            # Include negative notes (deductions)
+            if note.startswith('-') or 'no ' in note_lower or 'missing' in note_lower or 'not ' in note_lower:
+                filtered.append(note)
+            # Include warnings about performance issues
+            elif 'may impact' in note_lower or 'concern' in note_lower or 'issue' in note_lower:
+                filtered.append(note)
+            # Include specific missing feature indicators
+            elif any(indicator in note_lower for indicator in ['lacks', 'without', 'does not', 'cannot', 'failed']):
+                filtered.append(note)
+        
+        return filtered
+
+    def _generate_adaptability_missing_items(self, component_data: Dict) -> List[str]:
+        """Generate specific missing items based on Adaptability Analysis component scores"""
+        missing_items = []
+        
+        # Configuration flexibility issues (threshold: 50)
+        config_score = component_data.get('configuration_score', 0)
+        if config_score < 30:
+            missing_items.append("- Limited or no configurable parameters")
+            missing_items.append("- No support for configuration files or environment variables")
+        elif config_score < 60:
+            missing_items.append("- Basic configuration only, missing advanced parameter options")
+        
+        # Cross-platform compatibility issues (threshold: 40)
+        platform_score = component_data.get('cross_platform_score', 0)
+        if platform_score < 20:
+            missing_items.append("- No cross-platform compatibility considerations")
+            missing_items.append("- Platform-specific code that won't work on all systems")
+        elif platform_score < 50:
+            missing_items.append("- Limited cross-platform support")
+        
+        # Extensibility issues (threshold: 40)
+        extensibility_score = component_data.get('extensibility_score', 0)
+        if extensibility_score < 25:
+            missing_items.append("- No modular design or extension points")
+            missing_items.append("- Monolithic structure difficult to extend")
+        elif extensibility_score < 50:
+            missing_items.append("- Limited extensibility and modularity")
+        
+        # Environment adaptation issues (threshold: 30)
+        env_score = component_data.get('environment_adaptation_score', 0)
+        if env_score < 15:
+            missing_items.append("- No environment detection or adaptation logic")
+            missing_items.append("- Missing permission/elevation handling")
+        elif env_score < 40:
+            missing_items.append("- Basic environment adaptation only")
+        
+        # Input/Output flexibility issues (threshold: 40)
+        io_score = component_data.get('input_output_flexibility_score', 0)
+        if io_score < 25:
+            missing_items.append("- Limited input/output format options")
+            missing_items.append("- No support for different data sources or output formats")
+        elif io_score < 50:
+            missing_items.append("- Basic I/O flexibility, missing advanced format support")
+        
+        # Error recovery issues (threshold: 30)
+        recovery_score = component_data.get('error_recovery_score', 0)
+        if recovery_score < 20:
+            missing_items.append("- No graceful error recovery mechanisms")
+            missing_items.append("- Missing fallback strategies for failure scenarios")
+        elif recovery_score < 40:
+            missing_items.append("- Basic error handling, missing robust recovery patterns")
+        
+        # Also include any explicit deduction notes
+        detailed_notes = component_data.get('detailed_notes', [])
+        for note in detailed_notes:
+            if note.startswith('-'):
+                missing_items.append(note)
+        
+        return missing_items[:8]  # Limit to top 8 most critical missing items
+
+    def _generate_readability_missing_items(self, score_data: Dict) -> List[str]:
+        """Generate specific missing items based on Readability Analysis details and score"""
+        missing_items = []
+        details = score_data.get('details', {})
+        score = score_data.get('score', 0)
+        
+        # Comment quality issues
+        comment_ratio = details.get('comment_ratio', 0)
+        if comment_ratio < 0.05:
+            missing_items.append("- Very few or no explanatory comments (< 5% of code)")
+        elif comment_ratio < 0.10:
+            missing_items.append("- Insufficient comments for code clarity (< 10% of code)")
+        
+        # Documentation issues
+        if not details.get('has_help_block', False):
+            missing_items.append("- No PowerShell help documentation block")
+        else:
+            help_sections = details.get('help_sections_count', 0)
+            if help_sections < 3:
+                missing_items.append("- Incomplete help documentation (missing key sections)")
+        
+        # Variable naming issues
+        meaningful_ratio = details.get('meaningful_variable_ratio', 1)
+        if meaningful_ratio < 0.7:
+            missing_items.append("- Many unclear or abbreviated variable names")
+        elif meaningful_ratio < 0.9:
+            missing_items.append("- Some variable names could be more descriptive")
+        
+        # Code organization issues
+        function_count = details.get('function_count', 0)
+        if function_count == 0:
+            missing_items.append("- No functions defined (monolithic code structure)")
+        
+        section_comments = details.get('section_comments', 0)
+        if section_comments < 2:
+            missing_items.append("- No logical code sections with explanatory headers")
+        
+        # Indentation issues
+        if details.get('mixed_indentation', False):
+            missing_items.append("- Inconsistent indentation style (mixed spaces and tabs)")
+        
+        indentation_ratio = details.get('indentation_ratio', 0)
+        if indentation_ratio < 0.2:
+            missing_items.append("- Poor or no code indentation structure")
+        
+        # Score-based general issues
+        if score < 30:
+            missing_items.append("- Overall code structure makes it difficult to read and understand")
+        elif score < 50:
+            missing_items.append("- Code readability could be significantly improved")
+        
+        # Filter out duplicates while preserving order
+        seen = set()
+        filtered_items = []
+        for item in missing_items:
+            if item not in seen:
+                seen.add(item)
+                filtered_items.append(item)
+        
+        return filtered_items[:8]  # Limit to top 8 most critical missing items
+
+    def _generate_code_quality_missing_items(self, score_data: Dict) -> List[str]:
+        """Generate specific missing items based on Code Quality Analysis details and score"""
+        missing_items = []
+        details = score_data.get('details', {})
+        score = score_data.get('score', 0)
+        notes = score_data.get('notes', [])
+        
+        # Error handling issues
+        if not details.get('has_try_catch', False) and not details.get('has_error_action', False):
+            missing_items.append("- No error handling (missing try-catch blocks or ErrorAction)")
+        
+        if not details.get('has_error_variable', False):
+            missing_items.append("- No error tracking with ErrorVariable")
+        
+        # Parameter validation issues
+        if not details.get('has_parameter_attributes', False):
+            missing_items.append("- No Parameter attributes for proper parameter handling")
+        
+        if not details.get('has_mandatory_params', False):
+            missing_items.append("- No mandatory parameters defined")
+        
+        if not details.get('supports_pipeline', False):
+            missing_items.append("- No pipeline input support (ValueFromPipeline)")
+        
+        type_hints = details.get('type_hints_count', 0)
+        if type_hints == 0:
+            missing_items.append("- No type hints for parameters ([string], [int], etc.)")
+        elif type_hints < 3:
+            missing_items.append("- Limited type hints (only few parameters have types)")
+        
+        # Code organization issues  
+        function_count = details.get('function_count', 0)
+        if function_count == 0:
+            missing_items.append("- No functions defined (monolithic code structure)")
+        
+        if not details.get('has_consistent_indentation', False):
+            missing_items.append("- Inconsistent or poor code indentation")
+        
+        # PowerShell best practices issues
+        if not details.get('uses_approved_verbs', False):
+            missing_items.append("- Functions don't use approved PowerShell verbs (Get-, Set-, etc.)")
+        
+        if not details.get('has_cmdletbinding', False):
+            missing_items.append("- No CmdletBinding for advanced function features")
+        
+        # Check for explicit negative notes
+        for note in notes:
+            if note.startswith('-'):
+                # Convert positive form to missing item
+                if "No parameter block found" in note:
+                    missing_items.append("- Missing proper parameter block structure")
+                else:
+                    missing_items.append(note)
+        
+        # Score-based general issues
+        if score < 40:
+            missing_items.append("- Multiple fundamental code quality issues need attention")
+        elif score < 60:
+            missing_items.append("- Several code quality improvements needed")
+        
+        # Filter out duplicates while preserving order
+        seen = set()
+        filtered_items = []
+        for item in missing_items:
+            if item not in seen:
+                seen.add(item)
+                filtered_items.append(item)
+        
+        return filtered_items[:8]  # Limit to top 8 most critical missing items
+
+    def _generate_documentation_missing_items(self, score_data: Dict) -> List[str]:
+        """Generate specific missing items based on Documentation Analysis details and score"""
+        missing_items = []
+        details = score_data.get('details', {})
+        score = score_data.get('score', 0)
+        notes = score_data.get('notes', [])
+        
+        # README documentation issues
+        if not details.get('has_readme', True):  # Default True to handle missing key
+            missing_items.append("- No README documentation file")
+        elif details.get('readme_count', 0) > 0:
+            # Has README but check quality
+            readme_sections = details.get('readme_sections_found', [])
+            if not readme_sections:
+                missing_items.append("- README lacks essential sections (usage, examples, features)")
+            else:
+                missing_sections = []
+                expected_sections = ['usage', 'examples', 'features', 'installation', 'parameters']
+                for section in expected_sections:
+                    if section not in readme_sections:
+                        missing_sections.append(section)
+                
+                if len(missing_sections) > 2:
+                    missing_items.append(f"- README missing key sections: {', '.join(missing_sections[:3])}")
+            
+            if not details.get('has_code_examples', False):
+                missing_items.append("- README has no code examples or usage samples")
+            
+            if not details.get('comprehensive_readme', False):
+                missing_items.append("- README is too brief (needs more detailed documentation)")
+        
+        # Inline documentation issues
+        avg_comment_density = details.get('average_comment_density', 0)
+        if avg_comment_density < 0.05:
+            missing_items.append("- Very low inline commenting (< 5% of code)")
+        elif avg_comment_density < 0.10:
+            missing_items.append("- Insufficient inline comments for code clarity")
+        
+        files_with_headers = details.get('files_with_headers', 0)
+        total_ps1_files = details.get('total_ps1_files', 1)
+        if files_with_headers == 0:
+            missing_items.append("- No file header comments explaining purpose")
+        elif files_with_headers < total_ps1_files:
+            missing_items.append("- Some files missing header comments")
+        
+        section_comments = details.get('section_comments', 0)
+        if section_comments < total_ps1_files * 2:  # Less than 2 section comments per file
+            missing_items.append("- Insufficient section comments to organize code")
+        
+        # PowerShell help system issues
+        files_with_help = details.get('files_with_help', 0)
+        if files_with_help == 0:
+            missing_items.append("- No PowerShell help documentation (missing <# .SYNOPSIS #> blocks)")
+        elif files_with_help < total_ps1_files:
+            missing_items.append("- Some PowerShell files lack help documentation")
+        
+        comprehensive_help_files = details.get('comprehensive_help_files', 0)
+        if comprehensive_help_files == 0 and files_with_help > 0:
+            missing_items.append("- PowerShell help is basic (missing .DESCRIPTION, .EXAMPLE, etc.)")
+        elif comprehensive_help_files < files_with_help:
+            missing_items.append("- Some help blocks lack comprehensive sections")
+        
+        # Check for explicit negative notes
+        for note in notes:
+            if note.startswith('-'):
+                if "No README documentation found" in note and "- No README documentation file" not in missing_items:
+                    missing_items.append("- No README documentation file")
+                elif "Low inline commenting density" in note:
+                    pass  # Already handled above
+                else:
+                    missing_items.append(note)
+        
+        # Score-based general issues
+        if score < 30:
+            missing_items.append("- Documentation is severely lacking across multiple areas")
+        elif score < 50:
+            missing_items.append("- Documentation needs significant improvement")
+        
+        # Filter out duplicates while preserving order
+        seen = set()
+        filtered_items = []
+        for item in missing_items:
+            if item not in seen:
+                seen.add(item)
+                filtered_items.append(item)
+        
+        return filtered_items[:8]  # Limit to top 8 most critical missing items
+
     def _get_category_icon(self, category: str) -> str:
         """Get appropriate icon for each analysis category"""
         icons = {

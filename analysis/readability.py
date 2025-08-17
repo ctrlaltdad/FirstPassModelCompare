@@ -25,7 +25,14 @@ class ReadabilityAnalyzer(BaseAnalyzer):
     
     def analyze(self, files: List[FileInfo], llm_name: str, prompt_requirements: Dict[str, Any]) -> AnalysisScore:
         """Analyze code readability"""
-        score = 50  # Base score
+        # Scoring components (out of 100 total)
+        comment_score = 0       # Max 25 points
+        documentation_score = 0 # Max 20 points
+        naming_score = 0        # Max 20 points
+        organization_score = 0  # Max 20 points
+        indentation_score = 0   # Max 15 points
+        # Total: 100 points
+        
         notes = []
         details = {}
         
@@ -37,35 +44,39 @@ class ReadabilityAnalyzer(BaseAnalyzer):
             
             # Comment analysis
             comment_analysis = self._analyze_comments(lines)
-            score += comment_analysis['score']
+            comment_score += comment_analysis['score']
             notes.extend(comment_analysis['notes'])
             details.update(comment_analysis['details'])
             
             # Documentation analysis
             doc_analysis = self._analyze_documentation(content)
-            score += doc_analysis['score']
+            documentation_score += doc_analysis['score']
             notes.extend(doc_analysis['notes'])
             details.update(doc_analysis['details'])
             
             # Variable naming analysis
             naming_analysis = self._analyze_variable_naming(content)
-            score += naming_analysis['score']
+            naming_score += naming_analysis['score']
             notes.extend(naming_analysis['notes'])
             details.update(naming_analysis['details'])
             
             # Code organization analysis
             org_analysis = self._analyze_code_organization(content)
-            score += org_analysis['score']
+            organization_score += org_analysis['score']
             notes.extend(org_analysis['notes'])
             details.update(org_analysis['details'])
             
             # Indentation analysis
             indent_analysis = self._analyze_indentation(lines)
-            score += indent_analysis['score']
+            indentation_score += indent_analysis['score']
             notes.extend(indent_analysis['notes'])
             details.update(indent_analysis['details'])
         
-        final_score = min(100, max(0, score))
+        # Calculate final score (normalized to 100)
+        final_score = min(100, min(comment_score, 25) + min(documentation_score, 20) + 
+                         min(naming_score, 20) + min(organization_score, 20) + 
+                         min(indentation_score, 15))
+        
         return AnalysisScore(score=final_score, notes=notes, details=details)
     
     def _analyze_comments(self, lines: List[str]) -> Dict[str, Any]:

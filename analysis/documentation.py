@@ -25,29 +25,36 @@ class DocumentationAnalyzer(BaseAnalyzer):
     
     def analyze(self, files: List[FileInfo], llm_name: str, prompt_requirements: Dict[str, Any]) -> AnalysisScore:
         """Analyze documentation quality"""
-        score = 30  # Base score
+        # Scoring components (out of 100 total)
+        readme_score = 0        # Max 40 points
+        inline_score = 0        # Max 35 points
+        help_score = 0          # Max 25 points
+        # Total: 100 points
+        
         notes = []
         details = {}
         
         # Analyze README files
-        readme_score = self._analyze_readme_files(files)
-        score += readme_score['score']
-        notes.extend(readme_score['notes'])
-        details.update(readme_score['details'])
+        readme_analysis = self._analyze_readme_files(files)
+        readme_score += readme_analysis['score']
+        notes.extend(readme_analysis['notes'])
+        details.update(readme_analysis['details'])
         
         # Analyze inline documentation
-        inline_score = self._analyze_inline_documentation(files)
-        score += inline_score['score']
-        notes.extend(inline_score['notes'])
-        details.update(inline_score['details'])
+        inline_analysis = self._analyze_inline_documentation(files)
+        inline_score += inline_analysis['score']
+        notes.extend(inline_analysis['notes'])
+        details.update(inline_analysis['details'])
         
         # Analyze help system
-        help_score = self._analyze_help_system(files)
-        score += help_score['score']
-        notes.extend(help_score['notes'])
-        details.update(help_score['details'])
+        help_analysis = self._analyze_help_system(files)
+        help_score += help_analysis['score']
+        notes.extend(help_analysis['notes'])
+        details.update(help_analysis['details'])
         
-        final_score = min(100, max(0, score))
+        # Calculate final score (normalized to 100)
+        final_score = min(100, min(readme_score, 40) + min(inline_score, 35) + min(help_score, 25))
+        
         return AnalysisScore(score=final_score, notes=notes, details=details)
     
     def _analyze_readme_files(self, files: List[FileInfo]) -> Dict[str, Any]:

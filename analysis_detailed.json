@@ -1,5 +1,5 @@
 {
-  "analysis_timestamp": "2025-08-16T15:29:01.168309",
+  "analysis_timestamp": "2025-08-17T11:35:02.423231",
   "workspace_path": "d:\\CodingModel\\ModelCompare\\FirstPassModelCompare",
   "analyzers_used": [
     {
@@ -91,7 +91,7 @@
           }
         },
         "Readability Analysis": {
-          "score": 93,
+          "score": 43,
           "max_score": 100.0,
           "notes": [
             "Adequate commenting (>5% comment ratio)",
@@ -116,7 +116,7 @@
           }
         },
         "Code Quality Analysis": {
-          "score": 75,
+          "score": 66,
           "max_score": 100.0,
           "notes": [
             "+ Implements try-catch error handling",
@@ -126,21 +126,22 @@
             "+ Uses type hints (3 found)",
             "+ Consistent code indentation",
             "+ Uses CmdletBinding for advanced functions",
+            "- No parameter block found",
             "+ Reasonable line lengths (<10% over 120 chars)",
             "+ Good variable naming practices"
           ],
           "details": {
             "has_try_catch": true,
-            "error_handling_score": 15,
+            "error_handling_score": 20,
             "has_parameter_attributes": true,
             "has_mandatory_params": true,
             "supports_pipeline": true,
             "type_hints_count": 3,
             "has_type_hints": true,
-            "param_validation_score": 20,
+            "param_validation_score": 21,
             "function_count": 0,
             "has_consistent_indentation": true,
-            "organization_score": 5,
+            "organization_score": 10,
             "has_cmdletbinding": true,
             "powershell_practices_score": 5,
             "long_line_ratio": 0.015748031496062992,
@@ -149,7 +150,7 @@
           }
         },
         "Documentation Analysis": {
-          "score": 70,
+          "score": 35,
           "max_score": 100.0,
           "notes": [
             "- No README documentation found",
@@ -465,7 +466,7 @@
       ],
       "analysis_scores": {
         "Performance Analysis": {
-          "score": 55,
+          "score": 75,
           "max_score": 100.0,
           "notes": [
             "+ Uses ErrorAction SilentlyContinue (prevents performance hits from errors)",
@@ -483,7 +484,7 @@
           }
         },
         "Readability Analysis": {
-          "score": 93,
+          "score": 43,
           "max_score": 100.0,
           "notes": [
             "Excellent commenting (>15% comment ratio)",
@@ -506,7 +507,7 @@
           }
         },
         "Code Quality Analysis": {
-          "score": 64,
+          "score": 47,
           "max_score": 100.0,
           "notes": [
             "+ Uses ErrorAction for error handling",
@@ -520,13 +521,13 @@
           ],
           "details": {
             "has_error_action": true,
-            "error_handling_score": 10,
+            "error_handling_score": 12,
             "type_hints_count": 2,
             "has_type_hints": true,
-            "param_validation_score": 4,
+            "param_validation_score": 2,
             "function_count": 1,
             "has_consistent_indentation": true,
-            "organization_score": 10,
+            "organization_score": 13,
             "uses_approved_verbs": true,
             "has_param_block": true,
             "powershell_practices_score": 10,
@@ -536,7 +537,7 @@
           }
         },
         "Documentation Analysis": {
-          "score": 60,
+          "score": 30,
           "max_score": 100.0,
           "notes": [
             "- No README documentation found",
@@ -846,7 +847,7 @@
       ],
       "analysis_scores": {
         "Performance Analysis": {
-          "score": 55,
+          "score": 70,
           "max_score": 100.0,
           "notes": [
             "+ Uses ErrorAction SilentlyContinue (prevents performance hits from errors)",
@@ -870,7 +871,7 @@
           }
         },
         "Readability Analysis": {
-          "score": 100,
+          "score": 53,
           "max_score": 100.0,
           "notes": [
             "Adequate commenting (>5% comment ratio)",
@@ -916,7 +917,7 @@
           }
         },
         "Code Quality Analysis": {
-          "score": 78,
+          "score": 62,
           "max_score": 100.0,
           "notes": [
             "+ Uses ErrorAction for error handling",
@@ -931,14 +932,14 @@
           ],
           "details": {
             "has_error_action": true,
-            "error_handling_score": 10,
+            "error_handling_score": 12,
             "has_parameter_attributes": true,
             "type_hints_count": 16,
             "has_type_hints": true,
-            "param_validation_score": 18,
+            "param_validation_score": 17,
             "function_count": 1,
             "has_consistent_indentation": true,
-            "organization_score": 10,
+            "organization_score": 13,
             "has_cmdletbinding": true,
             "has_param_block": true,
             "powershell_practices_score": 10,
@@ -948,7 +949,7 @@
           }
         },
         "Documentation Analysis": {
-          "score": 100,
+          "score": 75,
           "max_score": 100.0,
           "notes": [
             "+ Includes README documentation",
@@ -1296,7 +1297,7 @@
       ],
       "analysis_scores": {
         "Performance Analysis": {
-          "score": 62,
+          "score": 69,
           "max_score": 100.0,
           "notes": [
             "+ Uses ErrorAction SilentlyContinue (prevents performance hits from errors)",
@@ -1318,7 +1319,7 @@
           }
         },
         "Readability Analysis": {
-          "score": 100,
+          "score": 53,
           "max_score": 100.0,
           "notes": [
             "Adequate commenting (>5% comment ratio)",
@@ -1344,7 +1345,7 @@
           }
         },
         "Code Quality Analysis": {
-          "score": 95,
+          "score": 80,
           "max_score": 100.0,
           "notes": [
             "+ Implements try-catch error handling",
@@ -1361,15 +1362,15 @@
           ],
           "details": {
             "has_try_catch": true,
-            "error_handling_score": 15,
+            "error_handling_score": 20,
             "has_parameter_attributes": true,
             "supports_pipeline": true,
             "type_hints_count": 6,
             "has_type_hints": true,
-            "param_validation_score": 20,
+            "param_validation_score": 19,
             "function_count": 2,
             "has_consistent_indentation": true,
-            "organization_score": 15,
+            "organization_score": 16,
             "uses_approved_verbs": true,
             "has_cmdletbinding": true,
             "has_param_block": true,
@@ -1380,7 +1381,7 @@
           }
         },
         "Documentation Analysis": {
-          "score": 100,
+          "score": 85,
           "max_score": 100.0,
           "notes": [
             "+ Includes README documentation",

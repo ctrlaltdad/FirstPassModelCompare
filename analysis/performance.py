@@ -25,7 +25,13 @@ class PerformanceAnalyzer(BaseAnalyzer):
     
     def analyze(self, files: List[FileInfo], llm_name: str, prompt_requirements: Dict[str, Any]) -> AnalysisScore:
         """Analyze performance characteristics"""
-        score = 30  # Conservative base score
+        # Scoring components (out of 100 total)
+        base_score = 50  # Start at 50 (average performance)
+        optimization_score = 0    # Max +30 points
+        concern_penalty = 0       # Max -20 points
+        complexity_bonus = 0      # Max +10 points
+        algorithm_penalty = 0     # Max -30 points
+        
         notes = []
         details = {}
         
@@ -39,29 +45,32 @@ class PerformanceAnalyzer(BaseAnalyzer):
             
             # PERFORMANCE OPTIMIZATIONS (Positive factors)
             optimizations = self._check_optimizations(content, content_lower)
-            score += optimizations['score']
+            optimization_score += optimizations['score']
             notes.extend(optimizations['notes'])
             details.update(optimizations['details'])
             
             # PERFORMANCE CONCERNS (Negative factors)
             concerns = self._check_performance_concerns(content, content_lower)
-            score -= concerns['score']
+            concern_penalty += concerns['score']
             notes.extend(concerns['notes'])
             details.update(concerns['details'])
             
             # CODE COMPLEXITY ANALYSIS
             complexity = self._analyze_complexity(content, total_lines)
-            score += complexity['score']
+            complexity_bonus += complexity['score']
             notes.extend(complexity['notes'])
             details.update(complexity['details'])
         
         # ALGORITHMIC EFFICIENCY
         algorithm_score = self._analyze_algorithmic_efficiency(content)
-        score += algorithm_score['score']
+        algorithm_penalty += abs(algorithm_score['score'])  # Convert to positive penalty
         notes.extend(algorithm_score['notes'])
         details.update(algorithm_score['details'])
         
-        final_score = min(100, max(0, score))
+        # Calculate final score (normalized to 0-100)
+        final_score = base_score + min(optimization_score, 30) - min(concern_penalty, 20) + min(complexity_bonus, 10) - min(algorithm_penalty, 30)
+        final_score = min(100, max(0, final_score))
+        
         return AnalysisScore(score=final_score, notes=notes, details=details)
     
     def _check_optimizations(self, content: str, content_lower: str) -> Dict[str, Any]:
