@@ -143,7 +143,8 @@ class DashboardGenerator:
             analyzer_categories=analyzer_categories,
             results=results,
             winner_summary=winner_summary,
-            timestamp=data.get('analysis_timestamp', datetime.now().isoformat())
+            timestamp=data.get('analysis_timestamp', datetime.now().isoformat()),
+            original_prompt=data.get('original_prompt', 'Prompt not available')
         )
         
         with open(output_path, 'w', encoding='utf-8') as f:
@@ -280,7 +281,8 @@ class DashboardGenerator:
     
     def _generate_html_template(self, llm_names: List[str], overall_scores: List[float], 
                               llm_datasets: List[Dict], analyzer_categories: List[str],
-                              results: List[Dict], winner_summary: str, timestamp: str) -> str:
+                              results: List[Dict], winner_summary: str, timestamp: str, 
+                              original_prompt: str) -> str:
         """Generate the complete HTML template"""
         
         # Generate detailed results table
@@ -594,6 +596,55 @@ class DashboardGenerator:
         .weight-controls-content.expanded {{
             max-height: 1000px;
             opacity: 1;
+        }}
+        
+        .prompt-section {{
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }}
+        
+        .prompt-header {{
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0;
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }}
+        
+        .prompt-header:hover {{
+            background-color: #f7fafc;
+            margin: 0 -20px;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }}
+        
+        .prompt-content {{
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            max-height: 0;
+            opacity: 0;
+        }}
+        
+        .prompt-content.expanded {{
+            max-height: 500px;
+            opacity: 1;
+            padding-top: 15px;
+        }}
+        
+        .prompt-text {{
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #4299e1;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            margin: 0;
         }}
         
         .advanced-badge {{
@@ -1043,6 +1094,21 @@ class DashboardGenerator:
         <h1>🤖 LLM Solution Analysis Dashboard</h1>
         <p>Comprehensive comparison of AI-generated code solutions</p>
         <p><small>Generated on: {timestamp}</small></p>
+    </div>
+    
+    <div class="prompt-section">
+        <div class="prompt-header" onclick="togglePrompt()">
+            <h3 style="margin: 0; border: none; padding: 0;">
+                📝 Original Task Prompt
+            </h3>
+            <button class="collapse-toggle collapsed" id="prompt-toggle">▼</button>
+        </div>
+        
+        <div class="prompt-content" id="prompt-content">
+            <div class="prompt-text">
+                {original_prompt}
+            </div>
+        </div>
     </div>
     
     {winner_summary}
@@ -1578,6 +1644,20 @@ class DashboardGenerator:
         function toggleWeightControls() {{
             const content = document.getElementById('weight-controls-content');
             const toggle = document.getElementById('weight-toggle');
+            
+            if (content.classList.contains('expanded')) {{
+                content.classList.remove('expanded');
+                toggle.classList.add('collapsed');
+            }} else {{
+                content.classList.add('expanded');
+                toggle.classList.remove('collapsed');
+            }}
+        }}
+        
+        // Toggle prompt visibility
+        function togglePrompt() {{
+            const content = document.getElementById('prompt-content');
+            const toggle = document.getElementById('prompt-toggle');
             
             if (content.classList.contains('expanded')) {{
                 content.classList.remove('expanded');

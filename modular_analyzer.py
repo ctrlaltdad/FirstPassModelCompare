@@ -360,9 +360,14 @@ class ModularLLMAnalyzer:
             else:
                 return obj
         
+        # Get the original prompt for display
+        prompt_requirements = self._parse_prompt_requirements()
+        original_prompt = prompt_requirements.get('prompt_text', 'Prompt not available')
+        
         data = {
             'analysis_timestamp': datetime.now().isoformat(),
             'workspace_path': self.workspace_path,
+            'original_prompt': original_prompt,
             'analyzers_used': [analyzer.get_info() for analyzer in self.registry.get_enabled_analyzers()],
             'results': convert_to_dict(results)
         }
