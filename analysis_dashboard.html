@@ -1417,8 +1417,91 @@
             // Update table rankings
             updateTableRankings(sortedResults);
             
+            // Update winner summary with new winner and color
+            updateWinnerSummary(sortedResults);
+            
             // Update charts
             updateCharts(llmNames, newOverallScores);
+        }
+        
+        function updateWinnerSummary(sortedResults) {
+            if (sortedResults.length === 0) return;
+            
+            const winner = sortedResults[0];
+            const llmColors = {
+                'llm1': 'rgba(255, 99, 132, 0.8)',
+                'llm2': 'rgba(54, 162, 235, 0.8)', 
+                'llm3': 'rgba(255, 205, 86, 0.8)',
+                'llm4': 'rgba(75, 192, 192, 0.8)'
+            };
+            
+            // Define text colors for better contrast
+            const textColors = {
+                'llm1': '#ffffff',  // White text for red background
+                'llm2': '#ffffff',  // White text for blue background
+                'llm3': '#2d3748',  // Dark text for yellow background
+                'llm4': '#ffffff'   // White text for teal background
+            };
+            
+            // Define darker background gradients for better contrast
+            const backgroundGradients = {
+                'llm1': 'linear-gradient(135deg, rgba(255, 99, 132, 0.9), rgba(220, 38, 127, 0.8))',
+                'llm2': 'linear-gradient(135deg, rgba(54, 162, 235, 0.9), rgba(29, 78, 216, 0.8))',
+                'llm3': 'linear-gradient(135deg, rgba(255, 205, 86, 0.9), rgba(245, 158, 11, 0.8))',
+                'llm4': 'linear-gradient(135deg, rgba(75, 192, 192, 0.9), rgba(20, 184, 166, 0.8))'
+            };
+            
+            // Update winner score and name
+            const scoreElement = document.querySelector('.winner-summary .score');
+            const labelElement = document.querySelector('.winner-summary .label');
+            const summaryElement = document.querySelector('.winner-summary');
+            
+            if (scoreElement) {
+                scoreElement.textContent = winner.newScore.toFixed(1);
+            }
+            
+            if (labelElement) {
+                labelElement.textContent = winner.llm_name;
+            }
+            
+            // Change the summary background color and text color to match the winning LLM
+            if (summaryElement && llmColors[winner.llm_name]) {
+                const winnerColor = llmColors[winner.llm_name];
+                const textColor = textColors[winner.llm_name];
+                const backgroundGradient = backgroundGradients[winner.llm_name];
+                
+                summaryElement.style.background = backgroundGradient;
+                summaryElement.style.color = textColor;
+                summaryElement.style.border = `3px solid ${winnerColor.replace('0.8', '1')}`;
+                
+                // Add a subtle glow effect
+                summaryElement.style.boxShadow = `0 4px 20px ${winnerColor.replace('0.8', '0.3')}`;
+            }
+            
+            // Update strengths section with winner's top categories
+            updateWinnerStrengths(winner);
+        }
+        
+        function updateWinnerStrengths(winner) {
+            const strengthsGrid = document.querySelector('.strength-grid');
+            if (!strengthsGrid || !winner.analysis_scores) return;
+            
+            // Get top scoring categories for the winner
+            const categoryScores = Object.entries(winner.analysis_scores)
+                .map(([category, data]) => ({
+                    name: category,
+                    score: data.score || 0
+                }))
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 4); // Top 4 categories
+            
+            // Update the strengths display
+            strengthsGrid.innerHTML = categoryScores.map(item => `
+                <div class="strength-item">
+                    <div class="strength-name">${item.name.replace(' Analysis', '')}</div>
+                    <div class="strength-score">${item.score.toFixed(1)}/100</div>
+                </div>
+            `).join('');
         }
         
         function updateTableRankings(sortedResults) {
@@ -1756,6 +1839,30 @@
                 modal.style.display = 'none';
             }
         }
+        
+        // Initialize winner summary with correct colors on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Calculate initial rankings and set winner color
+            const initialScores = originalScores.map((result, index) => {
+                let weightedSum = 0;
+                let totalWeight = 0;
+                
+                const analysisScores = result.analysis_scores || {};
+                Object.keys(currentWeights).forEach(category => {
+                    const weight = currentWeights[category] / 100;
+                    const score = analysisScores[category]?.score || 0;
+                    weightedSum += score * weight;
+                    totalWeight += weight;
+                });
+                
+                return {
+                    ...result,
+                    newScore: totalWeight > 0 ? weightedSum / totalWeight : 0
+                };
+            }).sort((a, b) => b.newScore - a.newScore);
+            
+            updateWinnerSummary(initialScores);
+        });
     </script>
     
     <!-- Scoring Guide Modal -->
